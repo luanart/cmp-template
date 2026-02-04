@@ -59,10 +59,8 @@ internal fun ProfileContent(
                 labelRes = Res.string.dark_mode,
                 trailingContent = {
                     Switch(
-                        checked = true,
-                        onCheckedChange = {
-
-                        }
+                        checked = state.isDarkTheme,
+                        onCheckedChange = { onAction(ProfileAction.ToggleDarkTheme(isDark = it)) }
                     )
                 }
             )

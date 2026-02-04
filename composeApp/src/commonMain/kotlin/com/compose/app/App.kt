@@ -13,12 +13,14 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.compose.app.enums.NavItem
 import com.compose.app.enums.NavItem.Companion.activeItem
 import com.compose.app.ui.NavScaffold
+import com.core.data.local.LocalStorage
 import com.core.presentation.theme.AppTheme
 import com.core.presentation.util.LocalScaffoldState
 import com.core.presentation.util.ScaffoldState
@@ -28,9 +30,13 @@ import com.navigation.NavRoute
 import com.navigation.navigate
 import com.navigation.navigateAsTopNav
 import kotlinx.collections.immutable.toPersistentList
+import org.koin.compose.koinInject
 
 @Composable
 fun App() {
+    val local = koinInject<LocalStorage>()
+    val darkMode by local.darkMode.collectAsStateWithLifecycle(initialValue = false)
+
     val navItems = remember { NavItem.entries }
     val screenType = rememberScreenType()
     val navController = rememberNavController()
@@ -41,7 +47,7 @@ fun App() {
         derivedStateOf { navItems.activeItem(currentBackStackEntry) }
     }
 
-    AppTheme {
+    AppTheme(isDarkMode = darkMode) {
         CompositionLocalProvider(
             LocalNavigator provides navController,
             LocalScaffoldState provides scaffoldState,

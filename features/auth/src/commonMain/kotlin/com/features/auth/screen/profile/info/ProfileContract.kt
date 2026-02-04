@@ -8,10 +8,15 @@ import com.features.auth.model.User
 import com.navigation.NavRoute
 
 @Immutable
-data class ProfileState(val user: User = User(), val loading: Boolean = false): ViewState
+data class ProfileState(
+    val user: User = User(),
+    val loading: Boolean = false,
+    val isDarkTheme: Boolean = false,
+): ViewState
 
 sealed interface ProfileAction: ViewAction {
     data object EditProfile: ProfileAction
+    data class ToggleDarkTheme(val isDark: Boolean): ProfileAction
 }
 
 sealed interface ProfileEffect: ViewEffect {
