@@ -22,6 +22,7 @@ navigation-event = "1.0.0"
 material-icons = "1.7.3"
 m3 = "1.9.0"
 m3-adaptive = "1.2.0"
+landscapist = "2.9.3"
 
 #UNIT TEST
 mokkery = "3.1.1"
@@ -102,6 +103,10 @@ material3-adaptive = { group = "org.jetbrains.compose.material3.adaptive", name 
 material3-adaptive-layout = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-layout", version.ref = "m3-adaptive" }
 material3-adaptive-navigation = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-navigation", version.ref = "m3-adaptive" }
 
+#OTHER
+landscapist-image = { module = "com.github.skydoves:landscapist-image", version.ref = "landscapist" }
+landscapist-placeholder = { module = "com.github.skydoves:landscapist-placeholder", version.ref = "landscapist" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
@@ -134,3 +139,4 @@ koin = ["koin-annotations", "koin-compose", "koin-viewmodel", "koin-viewmodel-na
 compose = ["material3", "compose-foundation", "compose-material-icons", "compose-runtime", "compose-ui", "compose-ui-tooling-preview"]
 #noinspection UnusedVersionCatalogEntry
 material3-adaptive = ["material3-adaptive", "material3-adaptive-layout", "material3-adaptive-navigation"]
+image-loader = ["landscapist-image", "landscapist-placeholder"]

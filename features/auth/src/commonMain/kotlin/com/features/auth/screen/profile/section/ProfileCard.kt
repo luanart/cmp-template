@@ -1,6 +1,8 @@
 package com.features.auth.screen.profile.section
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -16,6 +18,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.core.presentation.theme.AppTheme
 import com.features.auth.model.User
+import com.skydoves.landscapist.components.rememberImageComponent
+import com.skydoves.landscapist.crossfade.CrossfadePlugin
+import com.skydoves.landscapist.image.LandscapistImage
+import com.skydoves.landscapist.placeholder.shimmer.ShimmerPlugin
 
 @Composable
 fun ProfileCard(
@@ -35,6 +41,17 @@ fun ProfileCard(
         },
         supportingContent = {
             Text(text = user.email)
+        },
+        leadingContent = {
+            LandscapistImage(
+                imageModel = { user.image },
+                modifier = Modifier.size(48.dp)
+                    .clip(CircleShape),
+                component = rememberImageComponent {
+                    +ShimmerPlugin()
+                    +CrossfadePlugin(duration = 550)
+                }
+            )
         },
         trailingContent = {
             IconButton(onClick = onEditProfile) {
