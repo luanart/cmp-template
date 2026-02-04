@@ -12,6 +12,6 @@ object ApiConfig {
     internal object Url {
         const val REFRESH_TOKEN = "auth/refresh"
         const val LOGIN = "auth/login"
-        const val LOGOUT = "auth/logout"
+        const val CURRENT = "auth/me"
     }
 }

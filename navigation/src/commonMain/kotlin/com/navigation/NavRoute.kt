@@ -25,5 +25,8 @@ sealed interface NavRoute {
     data object Profile : NavRoute
 
     @Serializable
+    data object EditProfile : NavRoute
+
+    @Serializable
     data object Test : NavRoute
 }

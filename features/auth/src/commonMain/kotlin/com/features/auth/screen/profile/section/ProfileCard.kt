@@ -1,0 +1,55 @@
+package com.features.auth.screen.profile.section
+
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.core.presentation.theme.AppTheme
+import com.features.auth.model.User
+
+@Composable
+fun ProfileCard(
+    user: User,
+    onEditProfile: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    ListItem(
+        modifier = modifier.then(
+            Modifier.clip(shape = RoundedCornerShape(size = 12.dp))
+        ),
+        colors = ListItemDefaults.colors(
+            containerColor = AppTheme.colors.surfaceContainer
+        ),
+        headlineContent = {
+            Text(text = user.name)
+        },
+        supportingContent = {
+            Text(text = user.email)
+        },
+        trailingContent = {
+            IconButton(onClick = onEditProfile) {
+                Icon(imageVector = Icons.Filled.Edit, contentDescription = "Edit")
+            }
+        }
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ProfileCardPreview() {
+    ProfileCard(
+        user = User(name = "John Doe", email = "johndoe@example.com"),
+        onEditProfile = {},
+        modifier = Modifier.padding(all = 16.dp)
+    )
+}

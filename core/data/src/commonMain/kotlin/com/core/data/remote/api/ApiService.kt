@@ -56,8 +56,10 @@ class ApiService(
 
         val response = httpClient.request(url) {
             this.method = method
-            this.setBody(data)
             this.contentType(contentType)
+            data?.let {
+                this.setBody(it)
+            }
         }
 
         if (response.status == HttpStatusCode.NoContent) {

@@ -8,6 +8,7 @@ import com.core.data.remote.api.ApiConfig
 import com.core.data.remote.api.ApiService
 import com.core.data.remote.dto.LoginRequestDto
 import com.core.data.remote.dto.LoginResponseDto
+import com.core.data.remote.dto.UserDto
 import com.core.data.repository.api.AuthRepository
 import org.koin.core.annotation.Single
 
@@ -24,5 +25,9 @@ internal class AuthRepositoryImpl(
             secureStorage.storeAccessToken(response.accessToken)
             secureStorage.storeRefreshToken(response.refreshToken)
         }
+    }
+
+    override suspend fun fetchCurrentProfile(): Result<UserDto> {
+        return runCatching { apiService.get<UserDto>(url = ApiConfig.Url.CURRENT) }
     }
 }

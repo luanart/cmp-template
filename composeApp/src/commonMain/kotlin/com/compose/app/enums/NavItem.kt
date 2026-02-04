@@ -31,18 +31,6 @@ enum class NavItem(
         labelRes = Res.string.my_profile,
         selectedIcon = Icons.Filled.AccountCircle,
         unselectedIcon = Icons.Outlined.AccountCircle,
-    ),
-    PROFILE2(
-        route = NavRoute.Profile,
-        labelRes = Res.string.my_profile,
-        selectedIcon = Icons.Filled.AccountCircle,
-        unselectedIcon = Icons.Outlined.AccountCircle,
-    ),
-    PROFILE3(
-        route = NavRoute.Profile,
-        labelRes = Res.string.my_profile,
-        selectedIcon = Icons.Filled.AccountCircle,
-        unselectedIcon = Icons.Outlined.AccountCircle,
     );
 
     companion object {
