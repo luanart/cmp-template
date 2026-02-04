@@ -67,3 +67,8 @@ fun <T: ViewEffect> LaunchedViewEffect(effect: Flow<T>, onEvent: (T) -> Unit) {
 fun ShowViewIf(visible: Boolean, content: @Composable () -> Unit) {
     if (visible) content()
 }
+
+@Composable
+fun <T> ShowViewIfNotNull(value: T?, content: @Composable (T) -> Unit) {
+    if (value != null) content(value)
+}
