@@ -12,12 +12,14 @@ import com.resources.Res
 import com.resources.dark_mode
 import com.resources.help_n_support
 import com.resources.language
+import com.resources.others
+import com.resources.preferences
 import com.resources.privacy_policy
 import org.jetbrains.compose.resources.StringResource
 
 enum class ProfileMenu(val type: ProfileMenuType, val action: ProfileMenuAction) {
-    CHANGE_LANGUAGE(ProfileMenuType.PREFERENCE, ProfileMenuAction.PREVIEW),
-    DARK_MODE(ProfileMenuType.PREFERENCE, ProfileMenuAction.SWITCH),
+    CHANGE_LANGUAGE(ProfileMenuType.PREFERENCES, ProfileMenuAction.PREVIEW),
+    DARK_MODE(ProfileMenuType.PREFERENCES, ProfileMenuAction.SWITCH),
     HELP_N_SUPPORT(ProfileMenuType.OTHERS, ProfileMenuAction.NAVIGATION),
     PRIVACY_POLICY(ProfileMenuType.OTHERS, ProfileMenuAction.NAVIGATION);
 
@@ -63,7 +65,13 @@ enum class ProfileMenu(val type: ProfileMenuType, val action: ProfileMenuAction)
 }
 
 enum class ProfileMenuType {
-    OTHERS, PREFERENCE;
+    OTHERS, PREFERENCES;
+
+    val labelRes: StringResource
+        get() = when(this) {
+            OTHERS -> Res.string.others
+            PREFERENCES -> Res.string.preferences
+        }
 }
 
 enum class ProfileMenuAction {

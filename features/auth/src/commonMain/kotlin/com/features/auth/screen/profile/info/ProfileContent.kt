@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.core.presentation.component.LabeledRow
@@ -44,8 +45,14 @@ internal fun ProfileContent(
         )
         Spacer(modifier = Modifier.padding(top = AppTheme.dimens.small))
 
-        groupedMenuItems.values.forEach { menus ->
-            Spacer(modifier = Modifier.padding(top = AppTheme.dimens.default))
+        groupedMenuItems.forEach { (type, menus) ->
+            Text(
+                text = stringResource(type.labelRes),
+                style = AppTheme.typography.bodySmall,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(top = AppTheme.dimens.default)
+                    .padding(bottom = AppTheme.dimens.small)
+            )
 
             Column(
                 modifier = Modifier.cardContainer(color = AppTheme.colors.surfaceContainer)
