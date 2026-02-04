@@ -8,8 +8,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.resources.Res
 import com.resources.dark_mode
 import com.resources.help_n_support
-import com.resources.others
-import com.resources.preferences
 import com.resources.privacy_policy
 import org.jetbrains.compose.resources.StringResource
 
