@@ -23,7 +23,8 @@
     <string name="home">Home</string>
     <!-- Account module -->
     <string name="my_profile">My Profile</string>
+    <string name="language">Language</string>
+    <string name="dark_mode">Dark Mode</string>
     <string name="help_n_support">Help &amp; Support</string>
     <string name="privacy_policy">Privacy Policy</string>
-    <string name="dark_mode">Dark Mode</string>
 </resources>

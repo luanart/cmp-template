@@ -12,6 +12,7 @@ import com.navigation.NavRoute
 data class ProfileState(
     val user: User = User(),
     val loading: Boolean = false,
+    val language: String = "en-US",
     val isDarkTheme: Boolean = false,
 ): ViewState
 

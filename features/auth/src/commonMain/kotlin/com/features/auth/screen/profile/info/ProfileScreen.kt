@@ -32,6 +32,6 @@ internal fun ProfileScreen() {
         error = error,
         pageTitle = stringResource(Res.string.my_profile)
     ) {
-        ProfileContent(state = state, onAction = viewModel::handleAction)
+        ProfileContent(state = state, dispatcher = viewModel::handleAction)
     }
 }

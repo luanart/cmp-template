@@ -45,6 +45,6 @@ internal fun HomeScreen() {
             }
         }
     ) {
-        HomeContent(state = state, onAction = viewModel::handleAction)
+        HomeContent(state = state, dispatcher = viewModel::handleAction)
     }
 }

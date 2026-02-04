@@ -1,6 +1,5 @@
 package com.features.auth.screen.profile.section
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,13 +25,11 @@ import com.skydoves.landscapist.placeholder.shimmer.ShimmerPlugin
 @Composable
 fun ProfileCard(
     user: User,
+    loading: Boolean,
     onEditProfile: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     ListItem(
-        modifier = modifier.then(
-            Modifier.clip(shape = RoundedCornerShape(size = 12.dp))
-        ),
+        modifier = Modifier.clip(shape = RoundedCornerShape(size = 12.dp)),
         colors = ListItemDefaults.colors(
             containerColor = AppTheme.colors.surfaceContainer
         ),
@@ -54,7 +51,7 @@ fun ProfileCard(
             )
         },
         trailingContent = {
-            IconButton(onClick = onEditProfile) {
+            IconButton(onClick = onEditProfile, enabled = !loading) {
                 Icon(imageVector = Icons.Filled.Edit, contentDescription = "Edit")
             }
         }
@@ -66,7 +63,7 @@ fun ProfileCard(
 fun ProfileCardPreview() {
     ProfileCard(
         user = User(name = "John Doe", email = "johndoe@example.com"),
-        onEditProfile = {},
-        modifier = Modifier.padding(all = 16.dp)
+        loading = true,
+        onEditProfile = {}
     )
 }

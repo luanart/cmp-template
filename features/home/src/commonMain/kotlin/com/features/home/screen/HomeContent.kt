@@ -8,7 +8,7 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 internal fun HomeContent(
     state: HomeState = HomeState(),
-    onAction: (HomeAction) -> Unit = {}
+    dispatcher: (HomeAction) -> Unit = {}
 ) {
     Text(text = "Home")
 }

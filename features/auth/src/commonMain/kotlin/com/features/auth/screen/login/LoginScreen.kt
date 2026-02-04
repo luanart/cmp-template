@@ -33,6 +33,6 @@ internal fun LoginScreen() {
     }
 
     BaseScreen(error = error, showTopBar = false, showLoading = state.loading) {
-        LoginContent(state = state, onAction = viewModel::handleAction)
+        LoginContent(state = state, dispatcher = viewModel::handleAction)
     }
 }

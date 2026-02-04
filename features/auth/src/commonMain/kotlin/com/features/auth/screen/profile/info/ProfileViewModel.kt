@@ -8,6 +8,7 @@ import com.core.data.repository.api.AuthRepository
 import com.core.presentation.base.BaseViewModel
 import com.features.auth.data.mapper.toUi
 import com.features.auth.enums.ProfileMenu
+import com.features.auth.enums.ProfileMenuAction
 import com.navigation.NavRoute
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
@@ -59,12 +60,15 @@ class ProfileViewModel (
         }
     }
 
-    private fun menuClicked(action: ProfileAction.MenuClicked) {
+    private fun menuClicked(clicked: ProfileAction.MenuClicked) {
         viewModelScope.launch {
-            when(action.menu) {
-                ProfileMenu.DARK_MODE -> if (action.menu.isToggle) {
-                    localStorage.setThemeAsDarkMode(action.checked)
-                    updateState { copy(isDarkTheme = action.checked) }
+            when(clicked.menu) {
+                ProfileMenu.DARK_MODE -> if (clicked.menu.action == ProfileMenuAction.SWITCH) {
+                    localStorage.setThemeAsDarkMode(clicked.checked)
+                    updateState { copy(isDarkTheme = clicked.checked) }
+                }
+                ProfileMenu.CHANGE_LANGUAGE -> {
+                    /** action to change language */
                 }
                 ProfileMenu.HELP_N_SUPPORT -> {
                     /** action to navigate to help & support */

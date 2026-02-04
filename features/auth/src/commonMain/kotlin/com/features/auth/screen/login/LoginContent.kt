@@ -42,7 +42,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun LoginContent(
     state: LoginState = LoginState(),
-    onAction: (LoginAction) -> Unit = {}
+    dispatcher: (LoginAction) -> Unit = {}
 ) {
     val validators by getLoginValidators(state.field)
 
@@ -92,7 +92,7 @@ internal fun LoginContent(
         Button(
             enabled = validators.validate(),
             onClick = {
-                onAction(LoginAction.Login)
+                dispatcher(LoginAction.Login)
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -112,7 +112,7 @@ internal fun LoginContent(
             )
             TextButton(
                 onClick = {
-                    onAction(LoginAction.OpenRegister)
+                    dispatcher(LoginAction.OpenRegister)
                 },
                 contentPadding = PaddingValues(
                     horizontal = AppTheme.dimens.extraSmall,
