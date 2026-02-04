@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import com.core.presentation.data.Translatable
 import com.core.presentation.data.Validator
 import com.core.presentation.util.createValidators
-import com.features.auth.model.LoginField
+import com.features.auth.data.model.LoginField
 import com.resources.Res
 import com.resources.err_field_required
 import com.resources.password

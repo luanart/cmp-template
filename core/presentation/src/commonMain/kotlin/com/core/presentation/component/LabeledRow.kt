@@ -23,7 +23,7 @@ import com.core.presentation.util.applyIf
 fun LabeledRow(
     label: String,
     modifier: Modifier = Modifier,
-    image: ImageVector?,
+    image: ImageVector? = null,
     caption: String? = null,
     trailingContent: @Composable (() -> Unit)? = null,
 ) {
@@ -42,7 +42,7 @@ fun LabeledRow(
                 .padding(vertical = AppTheme.dimens.medium)
             ),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(space = AppTheme.dimens.default)
+        horizontalArrangement = Arrangement.spacedBy(space = AppTheme.dimens.medium)
     ) {
         ShowViewIfNotNull(value = image) {
             Icon(imageVector = it, contentDescription = label)

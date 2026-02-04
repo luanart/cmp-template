@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import com.core.presentation.base.ViewAction
 import com.core.presentation.base.ViewEffect
 import com.core.presentation.base.ViewState
-import com.features.auth.model.LoginField
+import com.features.auth.data.model.LoginField
 import com.navigation.NavRoute
 
 @Immutable

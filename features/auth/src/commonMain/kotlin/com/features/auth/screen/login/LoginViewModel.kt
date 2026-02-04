@@ -4,7 +4,7 @@ import com.core.common.extension.onFinally
 import com.core.common.extension.onSuccessNavigate
 import com.core.data.repository.api.AuthRepository
 import com.core.presentation.base.BaseViewModel
-import com.features.auth.mapper.toDto
+import com.features.auth.data.mapper.toDto
 import com.navigation.NavRoute
 import org.koin.android.annotation.KoinViewModel
 

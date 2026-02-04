@@ -1,4 +1,4 @@
-package com.features.auth.model
+package com.features.auth.data.model
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Immutable

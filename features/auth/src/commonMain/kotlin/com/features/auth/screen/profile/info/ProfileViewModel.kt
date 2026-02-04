@@ -6,7 +6,8 @@ import com.core.data.local.LocalStorage
 import com.core.data.remote.dto.UserDto
 import com.core.data.repository.api.AuthRepository
 import com.core.presentation.base.BaseViewModel
-import com.features.auth.mapper.toUi
+import com.features.auth.data.mapper.toUi
+import com.features.auth.enums.ProfileMenu
 import com.navigation.NavRoute
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
@@ -20,9 +21,9 @@ class ProfileViewModel (
 ) {
 
     override fun handleAction(action: ProfileAction) {
-        when (action) {
+        when(action) {
             ProfileAction.EditProfile -> navigateToForm()
-            is ProfileAction.ToggleDarkTheme -> toggleDarkTheme(action.isDark)
+            is ProfileAction.MenuClicked -> menuClicked(action)
         }
     }
 
@@ -58,10 +59,20 @@ class ProfileViewModel (
         }
     }
 
-    private fun toggleDarkTheme(isDark: Boolean) {
+    private fun menuClicked(action: ProfileAction.MenuClicked) {
         viewModelScope.launch {
-            localStorage.setThemeAsDarkMode(isDark)
-            updateState { copy(isDarkTheme = isDark) }
+            when(action.menu) {
+                ProfileMenu.DARK_MODE -> if (action.menu.isToggle) {
+                    localStorage.setThemeAsDarkMode(action.checked)
+                    updateState { copy(isDarkTheme = action.checked) }
+                }
+                ProfileMenu.HELP_N_SUPPORT -> {
+                    /** action to navigate to help & support */
+                }
+                ProfileMenu.PRIVACY_POLICY -> {
+                    /** action to navigate to privacy policy */
+                }
+            }
         }
     }
 }
