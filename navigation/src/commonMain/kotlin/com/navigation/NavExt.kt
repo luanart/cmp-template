@@ -8,11 +8,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavOptionsBuilder
 import kotlin.reflect.KClass
 
-fun NavController.canGoBack(): Boolean {
-    return previousBackStackEntry != null
-}
-
-fun NavController.navigate(
+fun NavController.navigateIfResumed(
     destination: NavRoute,
     navOptionsBuilder: NavOptionsBuilder.() -> Unit = {}
 ) {
@@ -22,14 +18,12 @@ fun NavController.navigate(
 }
 
 fun NavController.navigateAsTopNav(destination: NavRoute) {
-    if (currentBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED) {
-        navigate(route = destination) {
-            popUpTo(route = NavRoute.Home) {
-                saveState = true
-            }
-            launchSingleTop = true
-            restoreState = true
+    navigate(destination) {
+        popUpTo(graph.startDestinationId) {
+            saveState = true
         }
+        launchSingleTop = true
+        restoreState = true
     }
 }
 

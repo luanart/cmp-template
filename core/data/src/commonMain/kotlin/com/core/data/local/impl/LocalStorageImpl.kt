@@ -32,4 +32,10 @@ internal class LocalStorageImpl(private val dataStore: DataStore<Preferences>) :
             preferences[DARK_MODE] = darkMode
         }
     }
+
+    override suspend fun clearSession() {
+        dataStore.edit { preferences ->
+            preferences.clear()
+        }
+    }
 }

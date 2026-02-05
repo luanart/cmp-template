@@ -6,7 +6,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.core.presentation.base.BaseScreen
 import com.core.presentation.util.LaunchedViewEffect
 import com.navigation.LocalNavigator
-import com.navigation.navigate
 import com.resources.Res
 import com.resources.my_profile
 import org.jetbrains.compose.resources.stringResource
@@ -23,7 +22,7 @@ internal fun ProfileScreen() {
     LaunchedViewEffect(viewModel.effect) { effect ->
         when(effect) {
             is ProfileEffect.NavigateToForm -> {
-                navigator.navigate(destination = effect.route)
+                navigator.navigate(effect.route)
             }
         }
     }

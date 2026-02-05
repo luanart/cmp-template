@@ -7,4 +7,5 @@ interface LocalStorage {
     suspend fun storeUserId(userId: Int)
     val darkMode: Flow<Boolean>
     suspend fun setThemeAsDarkMode(darkMode: Boolean)
+    suspend fun clearSession()
 }

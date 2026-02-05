@@ -1,7 +1,6 @@
 package com.features.auth.screen.login
 
 import com.core.common.extension.onFinally
-import com.core.common.extension.onSuccessNavigate
 import com.core.data.repository.api.AuthRepository
 import com.core.presentation.base.BaseViewModel
 import com.features.auth.data.mapper.toDto
@@ -25,7 +24,6 @@ class LoginViewModel (
             authRepository.login(data = currentState.field.toDto())
                 .onFailure(action = ::sendError)
                 .onFinally(action = ::hideLoading)
-                .onSuccessNavigate(navigate = ::navigateToHomeScreen)
         }
     }
 
@@ -39,9 +37,5 @@ class LoginViewModel (
 
     private fun navigateToRegisterScreen() {
         postEffect(effect = LoginEffect.NavigateToRegister(route = NavRoute.Register))
-    }
-
-    private fun navigateToHomeScreen() {
-        postEffect(effect = LoginEffect.NavigateToHome(route = NavRoute.Home))
     }
 }

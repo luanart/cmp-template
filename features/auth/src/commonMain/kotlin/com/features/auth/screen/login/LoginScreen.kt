@@ -6,8 +6,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.core.presentation.base.BaseScreen
 import com.core.presentation.util.LaunchedViewEffect
 import com.navigation.LocalNavigator
-import com.navigation.NavRoute
-import com.navigation.navigate
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -20,14 +18,8 @@ internal fun LoginScreen() {
 
     LaunchedViewEffect(viewModel.effect) { effect ->
         when(effect) {
-            is LoginEffect.NavigateToHome -> {
-                navigator.navigate(destination = effect.route) {
-                    popUpTo(route = NavRoute.Splash) { inclusive = true }
-                    launchSingleTop = true
-                }
-            }
             is LoginEffect.NavigateToRegister -> {
-                navigator.navigate(destination = effect.route)
+                navigator.navigate(effect.route)
             }
         }
     }

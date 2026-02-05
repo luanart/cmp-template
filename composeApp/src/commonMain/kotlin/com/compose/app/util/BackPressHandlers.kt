@@ -9,8 +9,14 @@ class BackPressHandlers(
     private val showLeaveConfirmation: (Boolean) -> Unit
 ) {
     val backPressed: (Boolean) -> Unit = { needConfirmation ->
-        if (needConfirmation) showLeaveConfirmation(true)
-        else navigator.popBackStack()
+        when {
+            needConfirmation -> {
+                showLeaveConfirmation(true)
+            }
+            navigator.previousBackStackEntry != null -> {
+                navigator.popBackStack()
+            }
+        }
     }
 
     val cancelLeaving: () -> Unit = { showLeaveConfirmation(false) }

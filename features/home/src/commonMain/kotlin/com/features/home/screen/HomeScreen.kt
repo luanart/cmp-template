@@ -10,7 +10,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.core.presentation.base.BaseScreen
 import com.core.presentation.util.LaunchedViewEffect
 import com.navigation.LocalNavigator
-import com.navigation.navigate
 import com.resources.Res
 import com.resources.home
 import com.resources.my_profile
@@ -18,7 +17,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-internal fun HomeScreen() {
+fun HomeScreen() {
     val navigator = LocalNavigator.current
     val viewModel = koinViewModel<HomeViewModel>()
 
@@ -28,7 +27,7 @@ internal fun HomeScreen() {
     LaunchedViewEffect(viewModel.effect) { effect ->
         when(effect) {
             is HomeEffect.NavigateToTestPage -> {
-                navigator.navigate(destination = effect.route)
+                navigator.navigate(effect.route)
             }
         }
     }

@@ -1,19 +1,11 @@
 package com.core.presentation.base
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import com.core.presentation.component.LocalSnackbarHostState
 import com.core.presentation.component.SnackbarType
 import com.core.presentation.data.AppError
@@ -33,7 +25,7 @@ fun BaseScreen(
     backConfirmationData: Confirmation? = null,
     topBarActions: @Composable (RowScope.() -> Unit)? = null,
     floatingButton: @Composable (() -> Unit)? = null,
-    content: @Composable BoxScope.() -> Unit
+    content: @Composable () -> Unit
 ) {
     val scaffoldState = LocalScaffoldState.current
     val snackbarHostState = LocalSnackbarHostState.current
@@ -66,23 +58,10 @@ fun BaseScreen(
         }
     }
 
-    AnimatedContent(
-        targetState = error != null && error.fullPage,
-        label = "FullPageError"
-    ) { isError ->
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .safeDrawingPadding()
-                .navigationBarsPadding()
-        ) {
-            if (isError && !error?.message.isNullOrBlank()) {
-                Text(text = error.message)
-            } else {
-                content()
-            }
-        }
+    if (error != null && error.fullPage && error.message.isNotBlank()) {
+        Text(text = error.message)
+    } else {
+        content()
     }
 
     if (showLoading) {

@@ -9,24 +9,15 @@ val LocalNavigator = staticCompositionLocalOf<NavController> {
 }
 
 sealed interface NavRoute {
-    @Serializable
-    data object Splash : NavRoute
+    @Serializable data object Splash : NavRoute
 
-    @Serializable
-    data object Login : NavRoute
+    // Auth
+    @Serializable data object Login : NavRoute
+    @Serializable data object Register : NavRoute
 
-    @Serializable
-    data object Register : NavRoute
-
-    @Serializable
-    data object Home : NavRoute
-
-    @Serializable
-    data object Profile : NavRoute
-
-    @Serializable
-    data object EditProfile : NavRoute
-
-    @Serializable
-    data object Test : NavRoute
+    // Main
+    @Serializable data object Home : NavRoute
+    @Serializable data object Profile : NavRoute
+    @Serializable data object EditProfile : NavRoute
+    @Serializable data object Test : NavRoute
 }

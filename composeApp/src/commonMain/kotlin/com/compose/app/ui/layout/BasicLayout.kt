@@ -1,7 +1,11 @@
 package com.compose.app.ui.layout
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
@@ -34,6 +38,14 @@ fun BasicLayout(
 
     CompositionLocalProvider(LocalSnackbarHostState provides snackbarState) {
         Scaffold(
+            topBar = {
+                if (state.screenConfig.showTopBar) {
+                    TopAppBar(
+                        title = { Text(state.screenConfig.pageTitle) },
+                        actions = { state.screenConfig.topBarActions?.invoke(this) }
+                    )
+                }
+            },
             bottomBar = bottomBar,
             floatingActionButton = {
                 state.screenConfig.floatingButton?.invoke()
@@ -42,7 +54,10 @@ fun BasicLayout(
                 CustomSnackbarHost(state = snackbarState, modifier = Modifier.imePadding())
             },
         ) {
-            content()
+
+            Box(modifier = Modifier.padding(it)) {
+                content()
+            }
 
             NavigationEventHandler(
                 state = navEventState,

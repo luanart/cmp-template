@@ -16,6 +16,5 @@ sealed interface LoginAction: ViewAction {
 }
 
 sealed interface LoginEffect: ViewEffect {
-    data class NavigateToHome(val route: NavRoute): LoginEffect
     data class NavigateToRegister(val route: NavRoute): LoginEffect
 }

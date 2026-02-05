@@ -5,11 +5,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,9 +27,16 @@ import com.core.presentation.component.LabeledRow
 import com.core.presentation.theme.AppTheme
 import com.core.presentation.util.ShowViewIf
 import com.core.presentation.util.cardContainer
+import com.core.presentation.widget.ConfirmationDialog
 import com.features.auth.enums.ProfileMenu
 import com.features.auth.enums.ProfileMenuAction
 import com.features.auth.screen.profile.section.ProfileCard
+import com.resources.Res
+import com.resources.confirm_logout_message
+import com.resources.confirm_logout_title
+import com.resources.logout
+import com.resources.stay_here
+import com.resources.yes_logout
 import org.jetbrains.compose.resources.stringResource
 
 @Preview(showBackground = true)
@@ -78,6 +89,44 @@ internal fun ProfileContent(
                 }
             }
         }
+
+        Spacer(modifier = Modifier.weight(weight = 1f))
+        Button(
+            colors = ButtonDefaults.buttonColors(
+                contentColor = AppTheme.colors.onError,
+                containerColor = AppTheme.colors.error
+            ),
+            onClick = {
+                dispatcher(ProfileAction.ToggleConfirmLogout(confirm = true))
+            },
+            modifier = Modifier.fillMaxWidth()
+                .padding(bottom = AppTheme.dimens.default)
+        ) {
+            Text(text = stringResource(Res.string.logout))
+        }
+    }
+
+    ShowViewIf(visible = state.confirmLogout) {
+        ConfirmationDialog(
+            title = stringResource(Res.string.confirm_logout_title),
+            message = stringResource(Res.string.confirm_logout_message),
+            actions = { modifier ->
+                Button(
+                    onClick = { dispatcher(ProfileAction.Logout) },
+                    modifier = modifier
+                ) {
+                    Text(text = stringResource(Res.string.yes_logout))
+                }
+                OutlinedButton(
+                    onClick = {
+                        dispatcher(ProfileAction.ToggleConfirmLogout(confirm = false))
+                    },
+                    modifier = modifier
+                ) {
+                    Text(text = stringResource(Res.string.stay_here))
+                }
+            }
+        )
     }
 }
 

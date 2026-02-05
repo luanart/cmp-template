@@ -3,6 +3,8 @@ package com.features.auth.screen.profile.info
 import androidx.lifecycle.viewModelScope
 import com.core.common.extension.onFinally
 import com.core.data.local.LocalStorage
+import com.core.data.local.SecureStorage
+import com.core.data.local.SecureStorage.Companion.clearToken
 import com.core.data.remote.dto.UserDto
 import com.core.data.repository.api.AuthRepository
 import com.core.presentation.base.BaseViewModel
@@ -16,6 +18,7 @@ import org.koin.android.annotation.KoinViewModel
 @KoinViewModel
 class ProfileViewModel (
     private val localStorage: LocalStorage,
+    private val secureStorage: SecureStorage,
     private val authRepository: AuthRepository,
 ) : BaseViewModel<ProfileState, ProfileAction, ProfileEffect>(
     initialState = ProfileState()
@@ -24,7 +27,9 @@ class ProfileViewModel (
     override fun handleAction(action: ProfileAction) {
         when(action) {
             ProfileAction.EditProfile -> navigateToForm()
-            is ProfileAction.MenuClicked -> menuClicked(action)
+            ProfileAction.Logout -> logout()
+            is ProfileAction.MenuClicked -> menuClicked(clicked = action)
+            is ProfileAction.ToggleConfirmLogout -> toggleConfirmLogout(action.confirm)
         }
     }
 
@@ -35,6 +40,12 @@ class ProfileViewModel (
                 .onFailure(action = ::sendError)
                 .onFinally(action = ::hideLoading)
                 .onSuccess(action = ::updateUser)
+        }
+    }
+
+    private fun initializeDarkTheme() {
+        viewModelScope.launch {
+            localStorage.darkMode.collect { updateState { copy(isDarkTheme = it) } }
         }
     }
 
@@ -54,9 +65,11 @@ class ProfileViewModel (
         postEffect(effect = ProfileEffect.NavigateToForm(route = NavRoute.EditProfile))
     }
 
-    private fun initializeDarkTheme() {
+    private fun logout() {
         viewModelScope.launch {
-            localStorage.darkMode.collect { updateState { copy(isDarkTheme = it) } }
+            updateState { copy(confirmLogout = false) }
+            secureStorage.clearToken()
+            localStorage.clearSession()
         }
     }
 
@@ -78,5 +91,9 @@ class ProfileViewModel (
                 }
             }
         }
+    }
+
+    private fun toggleConfirmLogout(confirm: Boolean) {
+        updateState { copy(confirmLogout = confirm) }
     }
 }

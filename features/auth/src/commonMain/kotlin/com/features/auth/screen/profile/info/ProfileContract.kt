@@ -14,11 +14,14 @@ data class ProfileState(
     val loading: Boolean = false,
     val language: String = "en-US",
     val isDarkTheme: Boolean = false,
+    val confirmLogout: Boolean = false
 ): ViewState
 
 sealed interface ProfileAction: ViewAction {
     data object EditProfile: ProfileAction
+    data object Logout: ProfileAction
     data class MenuClicked(val menu: ProfileMenu, val checked: Boolean = false): ProfileAction
+    data class ToggleConfirmLogout(val confirm: Boolean): ProfileAction
 }
 
 sealed interface ProfileEffect: ViewEffect {
