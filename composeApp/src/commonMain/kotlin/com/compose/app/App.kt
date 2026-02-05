@@ -1,7 +1,5 @@
 package com.compose.app
 
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
@@ -16,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.compose.app.enums.NavItem.Companion.activeItem
 import com.compose.app.ui.NavScaffold
+import com.compose.app.util.NavTransitions
 import com.compose.app.util.SetStatusBarStyle
 import com.core.presentation.theme.AppTheme
 import com.core.presentation.util.LaunchedViewEffect
@@ -83,10 +82,10 @@ fun App() {
                 NavHost(
                     navController = navController,
                     startDestination = NavRoute.Splash,
-                    enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
-                    exitTransition = { slideOutHorizontally(targetOffsetX = { -it }) },
-                    popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }) },
-                    popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) },
+                    enterTransition = { NavTransitions.enter() },
+                    exitTransition = { NavTransitions.exit() },
+                    popEnterTransition = { NavTransitions.popEnter() },
+                    popExitTransition = { NavTransitions.popExit() },
                     builder = { buildNavigation() }
                 )
             }

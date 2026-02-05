@@ -1,11 +1,8 @@
 package com.core.presentation.widget
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,22 +17,16 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ErrorStateView(error: AppError) {
-    Box(
-        modifier = Modifier.fillMaxSize()
-            .padding(all = AppTheme.dimens.default),
-        contentAlignment = Alignment.Center
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(space = AppTheme.dimens.default)
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(space = AppTheme.dimens.default)
+        Text(text = error.message, textAlign = TextAlign.Center)
+        Button(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            onClick = { error.retryAction?.invoke() }
         ) {
-            Text(text = error.message, textAlign = TextAlign.Center)
-            Button(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                onClick = { error.retryAction?.invoke() }
-            ) {
-                Text(text = stringResource(Res.string.try_again))
-            }
+            Text(text = stringResource(Res.string.try_again))
         }
     }
 }

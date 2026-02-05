@@ -3,6 +3,7 @@ package com.core.presentation.base
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import com.core.presentation.component.LocalSnackbarHostState
@@ -33,7 +34,7 @@ fun BaseScreen(
     val currentTopBarActions by rememberUpdatedState(topBarActions)
     val currentFloatingButton by rememberUpdatedState(floatingButton)
 
-    LaunchedEffect(pageTitle, showTopBar, confirmOnBack) {
+    SideEffect {
         scaffoldState.updateConfig(
             config = ScreenConfig(
                 pageTitle = pageTitle,
@@ -46,9 +47,7 @@ fun BaseScreen(
     }
 
     LaunchedEffect(backConfirmationData) {
-        backConfirmationData?.let {
-            scaffoldState.setBackConfirmationData(it)
-        }
+        backConfirmationData?.let { scaffoldState.setBackConfirmationData(it) }
     }
 
     LaunchedEffect(error) {
