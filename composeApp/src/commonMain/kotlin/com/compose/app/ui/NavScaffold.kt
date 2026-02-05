@@ -30,6 +30,7 @@ fun NavScaffold(
         ScreenType.Compact -> {
             BasicLayout(
                 state = state,
+                navItem = selected,
                 bottomBar = {
                     PhoneNavigation(
                         selected = selected,
@@ -56,6 +57,7 @@ fun NavScaffold(
                 }
                 BasicLayout(
                     state = state,
+                    navItem = selected,
                     content = content
                 )
             }

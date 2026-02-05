@@ -27,6 +27,8 @@ fun NavController.navigateAsTopNav(destination: NavRoute) {
     }
 }
 
+fun NavController.canGoBack() = previousBackStackEntry != null
+
 fun NavBackStackEntry.isRouteInHierarchy(route: KClass<*>): Boolean {
     return this.destination.hierarchy.any { it.hasRoute(route) }
 }

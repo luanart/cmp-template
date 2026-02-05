@@ -2,6 +2,7 @@ package com.compose.app.util
 
 import androidx.compose.runtime.Stable
 import androidx.navigation.NavController
+import com.navigation.canGoBack
 
 @Stable
 class BackPressHandlers(
@@ -13,7 +14,7 @@ class BackPressHandlers(
             needConfirmation -> {
                 showLeaveConfirmation(true)
             }
-            navigator.previousBackStackEntry != null -> {
+            navigator.canGoBack() -> {
                 navigator.popBackStack()
             }
         }
