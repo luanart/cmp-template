@@ -20,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import com.compose.app.enums.NavItem
 import com.compose.app.enums.NavItem.Companion.activeItem
 import com.compose.app.ui.NavScaffold
+import com.compose.app.util.SetStatusBarStyle
 import com.core.data.local.LocalStorage
 import com.core.presentation.theme.AppTheme
 import com.core.presentation.util.LocalScaffoldState
@@ -48,6 +49,7 @@ fun App() {
     }
 
     AppTheme(isDarkMode = darkMode) {
+        SetStatusBarStyle(isDarkMode = darkMode)
         CompositionLocalProvider(
             LocalNavigator provides navController,
             LocalScaffoldState provides scaffoldState,
