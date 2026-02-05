@@ -7,9 +7,9 @@ import androidx.navigation.compose.composable
 import com.features.home.screen.HomeScreen
 import com.navigation.NavRoute
 
-fun NavGraphBuilder.homeRoute() {
+fun NavGraphBuilder.homeRoute(fadeInDuration: Int) {
     composable<NavRoute.Home>(
-        enterTransition = { fadeIn(animationSpec = tween(300)) }
+        enterTransition = { fadeIn(animationSpec = tween(fadeInDuration)) }
     ) {
         HomeScreen()
     }

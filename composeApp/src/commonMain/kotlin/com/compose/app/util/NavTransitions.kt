@@ -10,7 +10,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.ui.unit.IntOffset
 
-private const val NAV_ANIM_DURATION = 350
+const val NAV_ANIM_DURATION = 350
 
 object NavTransitions {
 

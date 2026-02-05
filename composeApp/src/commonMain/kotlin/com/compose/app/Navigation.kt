@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.compose.app.util.NAV_ANIM_DURATION
 import com.core.presentation.base.BaseScreen
 import com.features.auth.route.authRoute
 import com.features.auth.route.profileRoute
@@ -19,8 +20,8 @@ import com.navigation.NavRoute
 
 fun NavGraphBuilder.buildNavigation() {
     composable<NavRoute.Splash>(
-        enterTransition = { fadeIn(animationSpec = tween(300)) },
-        exitTransition = { fadeOut(animationSpec = tween(300)) }
+        enterTransition = { fadeIn(animationSpec = tween(NAV_ANIM_DURATION)) },
+        exitTransition = { fadeOut(animationSpec = tween(NAV_ANIM_DURATION)) }
     ) {
         BaseScreen(showTopBar = false) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -35,7 +36,7 @@ fun NavGraphBuilder.buildNavigation() {
         }
     }
 
-    authRoute()
-    homeRoute()
+    authRoute(fadeInDuration = NAV_ANIM_DURATION)
+    homeRoute(fadeInDuration = NAV_ANIM_DURATION)
     profileRoute()
 }
