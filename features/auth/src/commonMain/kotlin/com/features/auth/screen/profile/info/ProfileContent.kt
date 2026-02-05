@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Button
@@ -48,7 +50,11 @@ internal fun ProfileContent(
 
     val groupedMenuItems = remember { ProfileMenu.entries.groupBy { it.type } }
 
-    Column(modifier = Modifier.fillMaxSize().padding(all = AppTheme.dimens.default)) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+            .verticalScroll(state = rememberScrollState())
+            .padding(all = AppTheme.dimens.default)
+    ) {
         ProfileCard(
             user = state.user,
             loading = state.loading,
@@ -100,7 +106,7 @@ internal fun ProfileContent(
                 dispatcher(ProfileAction.ToggleConfirmLogout(confirm = true))
             },
             modifier = Modifier.fillMaxWidth()
-                .padding(bottom = AppTheme.dimens.default)
+                .padding(vertical = AppTheme.dimens.default)
         ) {
             Text(text = stringResource(Res.string.logout))
         }
