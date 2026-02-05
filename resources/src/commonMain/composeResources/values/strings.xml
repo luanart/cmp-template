@@ -34,4 +34,5 @@
     <string name="confirm_logout_title">Already Leaving?</string>
     <string name="confirm_logout_message">We'll keep an eye on your account while you're gone. And we will miss you a lot...</string>
     <string name="yes_logout">Yes, Logout</string>
+    <string name="edit_profile">Edit Profile</string>
 </resources>

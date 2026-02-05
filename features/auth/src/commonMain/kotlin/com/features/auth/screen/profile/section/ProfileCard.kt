@@ -17,10 +17,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.core.presentation.theme.AppTheme
 import com.features.auth.data.model.User
+import com.resources.Res
+import com.resources.edit_profile
 import com.skydoves.landscapist.components.rememberImageComponent
 import com.skydoves.landscapist.crossfade.CrossfadePlugin
 import com.skydoves.landscapist.image.LandscapistImage
 import com.skydoves.landscapist.placeholder.shimmer.ShimmerPlugin
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ProfileCard(
@@ -52,7 +55,10 @@ fun ProfileCard(
         },
         trailingContent = {
             IconButton(onClick = onEditProfile, enabled = !loading) {
-                Icon(imageVector = Icons.Filled.Edit, contentDescription = "Edit")
+                Icon(
+                    imageVector = Icons.Filled.Edit,
+                    contentDescription = stringResource(Res.string.edit_profile)
+                )
             }
         }
     )
