@@ -8,7 +8,10 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun EditProfileScreen() {
-    BaseScreen(pageTitle = stringResource(Res.string.edit_profile)) {
+    BaseScreen(
+        pageTitle = stringResource(Res.string.edit_profile),
+        confirmOnBack = true
+    ) {
 
     }
 }
