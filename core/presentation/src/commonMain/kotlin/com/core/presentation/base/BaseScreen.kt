@@ -1,7 +1,6 @@
 package com.core.presentation.base
 
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -12,6 +11,7 @@ import com.core.presentation.data.AppError
 import com.core.presentation.data.Confirmation
 import com.core.presentation.data.ScreenConfig
 import com.core.presentation.util.LocalScaffoldState
+import com.core.presentation.widget.ErrorStateView
 import com.core.presentation.widget.LoadingDialog
 
 @Composable
@@ -59,7 +59,7 @@ fun BaseScreen(
     }
 
     if (error != null && error.fullPage && error.message.isNotBlank()) {
-        Text(text = error.message)
+        ErrorStateView(error = error)
     } else {
         content()
     }

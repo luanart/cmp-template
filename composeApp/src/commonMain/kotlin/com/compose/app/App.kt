@@ -31,6 +31,7 @@ import com.core.presentation.util.rememberScreenType
 import com.navigation.LocalNavigator
 import com.navigation.NavRoute
 import com.navigation.navigateAsTopNav
+import com.navigation.startDestination
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
 import org.koin.compose.koinInject
@@ -56,9 +57,7 @@ fun App() {
             delay(300)
         }
 
-        val route = if (userId == null) NavRoute.Login else NavRoute.Home
-
-        navController.navigate(route) {
+        navController.navigate(route = startDestination(userId)) {
             popUpTo(0) { inclusive = true }
             launchSingleTop = true
         }

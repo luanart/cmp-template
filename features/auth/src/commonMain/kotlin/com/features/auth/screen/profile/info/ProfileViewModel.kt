@@ -35,17 +35,22 @@ class ProfileViewModel (
 
     override fun loadInitialData() {
         initializeDarkTheme()
-        launchWithRetry(onRetry = ::loadInitialData, onStart = ::showLoading) {
-            authRepository.fetchCurrentProfile()
-                .onFailure(action = ::sendError)
-                .onFinally(action = ::hideLoading)
-                .onSuccess(action = ::updateUser)
-        }
+        loadCurrentUser()
     }
 
     private fun initializeDarkTheme() {
         viewModelScope.launch {
             localStorage.darkMode.collect { updateState { copy(isDarkTheme = it) } }
+        }
+    }
+
+    private fun loadCurrentUser() {
+        println("CALL LOAD CURRENT USER")
+        launchWithRetry(onRetry = ::loadCurrentUser, onStart = ::showLoading) {
+            authRepository.fetchCurrentProfile()
+                .onFailure(action = ::sendError)
+                .onFinally(action = ::hideLoading)
+                .onSuccess(action = ::updateUser)
         }
     }
 

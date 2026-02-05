@@ -110,8 +110,8 @@ abstract class BaseViewModel<S : ViewState, A : ViewAction, E : ViewEffect>(
 
     fun retry(): Boolean {
         return pendingRetryAction?.let { action ->
+            clearError()
             action()
-            pendingRetryAction = null
             true
         } ?: false
     }
