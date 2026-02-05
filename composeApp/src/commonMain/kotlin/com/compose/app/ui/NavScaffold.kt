@@ -13,7 +13,6 @@ import com.compose.app.ui.navigation.TabletNavigation
 import com.core.presentation.data.ScreenType
 import com.core.presentation.util.ScaffoldState
 import com.core.presentation.util.rememberScreenType
-import com.navigation.NavRoute
 import kotlinx.collections.immutable.PersistentList
 
 @Composable
@@ -21,7 +20,7 @@ fun NavScaffold(
     state: ScaffoldState,
     navItems: PersistentList<NavItem>,
     selected: NavItem?,
-    onNavigate: (NavRoute) -> Unit,
+    onNavigate: (NavItem) -> Unit,
     screenType: ScreenType = rememberScreenType(),
     primaryActionContent: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit,

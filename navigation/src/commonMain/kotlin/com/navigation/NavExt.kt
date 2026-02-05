@@ -17,13 +17,20 @@ fun NavController.navigateIfResumed(
     }
 }
 
-fun NavController.navigateAsTopNav(destination: NavRoute) {
-    navigate(destination) {
+fun NavController.navigateAsTopNav(route: NavRoute) {
+    navigate(route) {
         popUpTo(graph.startDestinationId) {
             saveState = true
         }
         launchSingleTop = true
         restoreState = true
+    }
+}
+
+fun NavController.navigateAsStart(route: NavRoute) {
+    navigate(route) {
+        popUpTo(0) { inclusive = true }
+        launchSingleTop = true
     }
 }
 

@@ -6,7 +6,6 @@ import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.compose.app.enums.NavItem
-import com.navigation.NavRoute
 import kotlinx.collections.immutable.PersistentList
 import org.jetbrains.compose.resources.stringResource
 
@@ -14,7 +13,7 @@ import org.jetbrains.compose.resources.stringResource
 fun TabletNavigation(
     selected: NavItem?,
     navItems: PersistentList<NavItem>,
-    onNavigate: (NavRoute) -> Unit,
+    onNavigate: (NavItem) -> Unit,
     primaryActionContent: (@Composable () -> Unit)? = null,
 ) {
     NavigationRail(
@@ -32,9 +31,7 @@ fun TabletNavigation(
                 label = {
                     Text(text = stringResource(it.labelRes))
                 },
-                onClick = {
-                    onNavigate(it.route)
-                },
+                onClick = { onNavigate(it) },
             )
         }
     }

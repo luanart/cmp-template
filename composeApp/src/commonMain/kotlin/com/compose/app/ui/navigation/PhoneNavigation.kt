@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.compose.app.enums.NavItem
 import com.core.presentation.util.ShowViewIf
-import com.navigation.NavRoute
 import kotlinx.collections.immutable.PersistentList
 import org.jetbrains.compose.resources.stringResource
 
@@ -22,7 +21,7 @@ fun PhoneNavigation(
     selected: NavItem?,
     navItems: PersistentList<NavItem>,
     primaryActionContent: (@Composable () -> Unit)? = null,
-    onNavigate: (NavRoute) -> Unit
+    onNavigate: (NavItem) -> Unit
 ) {
     ShowViewIf(visible = selected != null) {
         NavigationBar {
@@ -54,7 +53,7 @@ fun PhoneNavigation(
                         Text(text = stringResource(item.labelRes))
                     },
                     onClick = {
-                        onNavigate(item.route)
+                        onNavigate(item)
                     },
                 )
             }

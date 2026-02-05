@@ -54,7 +54,7 @@ fun rememberScreenType(): ScreenType {
 }
 
 @Composable
-fun <T: ViewEffect> LaunchedViewEffect(effect: Flow<T>, onEvent: (T) -> Unit) {
+fun <T : ViewEffect> LaunchedViewEffect(effect: Flow<T>, onEvent: suspend (T) -> Unit) {
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(effect, lifecycleOwner.lifecycle) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {

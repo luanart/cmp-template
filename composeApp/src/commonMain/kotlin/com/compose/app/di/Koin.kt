@@ -15,7 +15,8 @@ fun initKoin(configuration : KoinAppDeclaration? = null) {
         modules(
             DataModule().module,
             AuthModule().module,
-            HomeModule().module
+            HomeModule().module,
+            appModule
         )
         printLogger(Level.DEBUG)
     }
