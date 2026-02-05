@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalAtomicApi::class)
+
 package com.core.presentation.base
 
 import androidx.lifecycle.ViewModel
@@ -18,6 +20,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
+import kotlin.concurrent.atomics.AtomicBoolean
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 abstract class BaseViewModel<S : ViewState, A : ViewAction, E : ViewEffect>(
     initialState: S
@@ -33,18 +37,6 @@ abstract class BaseViewModel<S : ViewState, A : ViewAction, E : ViewEffect>(
 
     private var pendingRetryAction: (() -> Unit)? = null
 
-    private val _state = MutableStateFlow(initialState)
-    val state: StateFlow<S> = _state.asStateFlow()
-        .onStart { loadInitialData() }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = initialState
-        )
-
-    val currentState: S
-        get() = state.value
-
     private val _effect = Channel<E>(Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
 
@@ -55,6 +47,24 @@ abstract class BaseViewModel<S : ViewState, A : ViewAction, E : ViewEffect>(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = null
         )
+
+    private val didDataLoaded = AtomicBoolean(false)
+
+    private val _state = MutableStateFlow(initialState)
+    val state: StateFlow<S> = _state.asStateFlow()
+        .onStart {
+            if (didDataLoaded.compareAndSet(expectedValue = false, newValue = true)) {
+                loadInitialData()
+            }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = initialState
+        )
+
+    val currentState: S
+        get() = state.value
 
     init {
         analytics.logScreen(screenName = screenName)

@@ -23,7 +23,6 @@ class ProfileViewModel (
 ) : BaseViewModel<ProfileState, ProfileAction, ProfileEffect>(
     initialState = ProfileState()
 ) {
-
     override fun handleAction(action: ProfileAction) {
         when(action) {
             ProfileAction.EditProfile -> navigateToForm()
