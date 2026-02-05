@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalAtomicApi::class)
-
 package com.core.presentation.base
 
 import androidx.lifecycle.ViewModel
@@ -13,14 +11,13 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
-import kotlin.concurrent.atomics.AtomicBoolean
-import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 abstract class BaseViewModel<S : ViewState, A : ViewAction, E : ViewEffect>(
     initialState: S
@@ -35,17 +32,10 @@ abstract class BaseViewModel<S : ViewState, A : ViewAction, E : ViewEffect>(
         ?: "Unknown"
 
     private var pendingRetryAction: (() -> Unit)? = null
-    private val hasInitialDataLoaded = AtomicBoolean(false)
 
     private val _state = MutableStateFlow(initialState)
-    val state: StateFlow<S> = _state
-        .onStart {
-            // Load initial data only once when flow starts being collected
-            if (hasInitialDataLoaded.compareAndSet(expectedValue = false, newValue = true)) {
-                analytics.logScreen(screenName = screenName)
-                loadInitialData()
-            }
-        }
+    val state: StateFlow<S> = _state.asStateFlow()
+        .onStart { loadInitialData() }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -65,6 +55,10 @@ abstract class BaseViewModel<S : ViewState, A : ViewAction, E : ViewEffect>(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = null
         )
+
+    init {
+        analytics.logScreen(screenName = screenName)
+    }
 
     open fun handleAction(action: A) {
         when(action) {
@@ -124,18 +118,6 @@ abstract class BaseViewModel<S : ViewState, A : ViewAction, E : ViewEffect>(
         super.onCleared()
         _effect.close()
         pendingRetryAction = null
-    }
-
-    protected inline fun <reified T> ViewAction.CallApi.runAs(block: (T) -> Unit) {
-        if (this is T) block(this)
-    }
-
-    protected inline fun <reified T> ViewAction.SideEffect.runAs(block: (T) -> Unit) {
-        if (this is T) block(this)
-    }
-
-    protected inline fun <reified T> ViewAction.UpdateData.runAs(block: (T) -> Unit) {
-        if (this is T) block(this)
     }
 }
 

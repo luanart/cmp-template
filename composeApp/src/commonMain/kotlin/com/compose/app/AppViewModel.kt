@@ -15,16 +15,16 @@ class AppViewModel(
 ) : BaseViewModel<AppState, AppAction, AppEffect>(
     initialState = AppState()
 ) {
-    override fun loadInitialData() {
-        initializeDarkMode()
-        initializeStartDestination()
-    }
-
     override fun handleAction(action: AppAction) {
         when(action) {
             is AppAction.NavigateTo -> postEffect(effect = NavigateToNavItem(action.route))
             is AppAction.UpdateSelectedNavItem -> updateState { copy(selectedNavItem = action.item) }
         }
+    }
+
+    override fun loadInitialData() {
+        initializeDarkMode()
+        initializeStartDestination()
     }
 
     private fun initializeDarkMode() {

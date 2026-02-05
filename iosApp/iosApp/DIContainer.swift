@@ -8,7 +8,7 @@
 import ComposeApp
 
 class DIContainer {
-    static let nativeConfiguration: (Koin_coreKoinApplication) -> Void = { koinApp in
+    static let koinApp: (Koin_coreKoinApplication) -> Void = { koinApp in
         koinApp.addAnalyticsModule(analyticsTracker: FirebaseAnalyticsImpl())
     }
 }

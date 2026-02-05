@@ -45,7 +45,6 @@ class ProfileViewModel (
     }
 
     private fun loadCurrentUser() {
-        println("CALL LOAD CURRENT USER")
         launchWithRetry(onRetry = ::loadCurrentUser, onStart = ::showLoading) {
             authRepository.fetchCurrentProfile()
                 .onFailure(action = ::sendError)

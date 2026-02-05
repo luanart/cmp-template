@@ -6,7 +6,7 @@ import FirebaseCore
 struct iOSApp: App {
     init() {
         FirebaseApp.configure()
-        KoinKt.doInitKoin(configuration: DIContainer.nativeConfiguration)
+        KoinKt.doInitKoin(app: DIContainer.koinApp)
     }
 
     var body: some Scene {

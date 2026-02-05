@@ -22,4 +22,4 @@ sealed interface NavRoute {
     @Serializable data object Test : NavRoute
 }
 
-fun startDestination(userId: Int?) = if (userId == null) NavRoute.Login else NavRoute.Home
+fun startDestination(userId: Int?): NavRoute = if (userId == null) NavRoute.Login else NavRoute.Home
