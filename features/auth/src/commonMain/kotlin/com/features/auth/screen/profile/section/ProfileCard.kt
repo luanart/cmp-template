@@ -2,20 +2,18 @@ package com.features.auth.screen.profile.section
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.core.presentation.component.LabeledRow
 import com.core.presentation.theme.AppTheme
+import com.core.presentation.util.cardContainer
 import com.features.auth.data.model.User
 import com.resources.Res
 import com.resources.edit_profile
@@ -31,22 +29,14 @@ fun ProfileCard(
     loading: Boolean,
     onEditProfile: () -> Unit,
 ) {
-    ListItem(
-        modifier = Modifier.clip(shape = RoundedCornerShape(size = 12.dp)),
-        colors = ListItemDefaults.colors(
-            containerColor = AppTheme.colors.surfaceContainer
-        ),
-        headlineContent = {
-            Text(text = user.name)
-        },
-        supportingContent = {
-            Text(text = user.email)
-        },
+    LabeledRow(
+        label = user.name,
+        caption = user.email,
+        modifier = Modifier.cardContainer(color = AppTheme.colors.surfaceContainer),
         leadingContent = {
             LandscapistImage(
                 imageModel = { user.image },
-                modifier = Modifier.size(48.dp)
-                    .clip(CircleShape),
+                modifier = Modifier.size(48.dp).clip(CircleShape),
                 component = rememberImageComponent {
                     +ShimmerPlugin()
                     +CrossfadePlugin(duration = 550)

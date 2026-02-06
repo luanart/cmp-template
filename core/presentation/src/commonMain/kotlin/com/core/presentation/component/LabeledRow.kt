@@ -25,6 +25,11 @@ fun LabeledRow(
     modifier: Modifier = Modifier,
     image: ImageVector? = null,
     caption: String? = null,
+    leadingContent: @Composable (() -> Unit)? = {
+        ShowViewIfNotNull(value = image) {
+            Icon(imageVector = it, contentDescription = label)
+        }
+    },
     trailingContent: @Composable (() -> Unit)? = null,
 ) {
     Row(
@@ -44,11 +49,9 @@ fun LabeledRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(space = AppTheme.dimens.medium)
     ) {
-        ShowViewIfNotNull(value = image) {
-            Icon(imageVector = it, contentDescription = label)
-        }
+        leadingContent?.invoke()
         Column(modifier = Modifier.weight(weight = 1f)) {
-            Text(text = label, fontWeight = FontWeight.Medium)
+            Text(text = label, fontWeight = FontWeight(450))
             ShowViewIfNotNull(value = caption) {
                 CaptionText(
                     value = it,
