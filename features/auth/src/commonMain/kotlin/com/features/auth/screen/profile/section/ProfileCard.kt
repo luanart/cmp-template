@@ -36,7 +36,8 @@ fun ProfileCard(
         leadingContent = {
             LandscapistImage(
                 imageModel = { user.image },
-                modifier = Modifier.size(48.dp).clip(CircleShape),
+                modifier = Modifier.size(48.dp)
+                    .clip(CircleShape),
                 component = rememberImageComponent {
                     +ShimmerPlugin()
                     +CrossfadePlugin(duration = 550)
