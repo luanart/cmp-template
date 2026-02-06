@@ -2,7 +2,7 @@ package com.core.presentation.util
 
 import com.core.common.error.ApiError
 import com.core.common.error.AppException
-import com.core.common.extension.orDefault
+import com.core.common.error.ErrorCode
 import com.core.presentation.data.AppError
 import com.resources.Res
 import com.resources.err_expired_session
@@ -10,18 +10,19 @@ import com.resources.err_no_internet
 import com.resources.err_unknown
 import org.jetbrains.compose.resources.getString
 
-suspend fun ApiError.getTranslatedMessage() : String {
-    val newMessage = mapOf(
-        Pair(1, getString(Res.string.err_expired_session)),
-    ).getOrElse(code.orDefault(0)) {
-        getString(Res.string.err_unknown)
+suspend fun ApiError.getTranslatedMessage(): String {
+    val defaultMessage = getString(Res.string.err_unknown)
+
+    if (code == null) {
+        return "${message ?: defaultMessage} (BE)"
     }
 
-    return if (code == null && !message.isNullOrBlank()) {
-        "$message (BE)"
-    } else {
-        "$newMessage (BE${code})"
+    val translatedMessage = when(ErrorCode.from(code)) {
+        ErrorCode.EXPIRED_SESSION -> getString(Res.string.err_expired_session)
+        else -> defaultMessage
     }
+
+    return "$translatedMessage (BE$code)"
 }
 
 internal suspend fun Throwable.toAppError(onClear: () -> Unit, onRetry: () -> Unit) = when (this) {
