@@ -20,8 +20,8 @@ import org.jetbrains.compose.resources.StringResource
 enum class ProfileMenu(val type: ProfileMenuType, val action: ProfileMenuAction) {
     CHANGE_LANGUAGE(ProfileMenuType.PREFERENCES, ProfileMenuAction.PREVIEW),
     DARK_MODE(ProfileMenuType.PREFERENCES, ProfileMenuAction.SWITCH),
-    HELP_N_SUPPORT(ProfileMenuType.OTHERS, ProfileMenuAction.NAVIGATION),
-    PRIVACY_POLICY(ProfileMenuType.OTHERS, ProfileMenuAction.NAVIGATION);
+    HELP_N_SUPPORT(ProfileMenuType.OTHERS, ProfileMenuAction.GENERAL),
+    PRIVACY_POLICY(ProfileMenuType.OTHERS, ProfileMenuAction.GENERAL);
 
     val image: ImageVector
         get() = when(this) {
@@ -75,5 +75,5 @@ enum class ProfileMenuType {
 }
 
 enum class ProfileMenuAction {
-    NAVIGATION, PREVIEW, SWITCH
+    GENERAL, PREVIEW, SWITCH
 }

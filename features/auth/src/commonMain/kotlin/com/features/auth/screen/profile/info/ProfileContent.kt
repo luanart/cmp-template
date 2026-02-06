@@ -143,7 +143,7 @@ private fun MenuAction(
     switchState: Pair<Boolean, (Boolean) -> Unit>?
 ) {
     when(menu.action) {
-        ProfileMenuAction.NAVIGATION -> {
+        ProfileMenuAction.GENERAL -> {
             Icon(
                 imageVector = Icons.Default.ChevronRight,
                 contentDescription = stringResource(menu.labelRes)
