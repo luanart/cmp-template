@@ -10,7 +10,7 @@ import com.navigation.NavRoute
 
 @Immutable
 data class ProfileState(
-    val user: User = User(),
+    val user: User = User.Dummy,
     val loading: Boolean = false,
     val language: String = "en-US",
     val isDarkTheme: Boolean = false,

@@ -4,7 +4,12 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 data class User(
-    val name: String = "Unknown",
-    val email: String = "unknown@error.com",
+    val name: String = "",
+    val email: String = "",
     val image: String? = null,
-)
+) {
+
+    companion object {
+        val Dummy = User(name = "Unknown", email = "error@unknown.com")
+    }
+}
