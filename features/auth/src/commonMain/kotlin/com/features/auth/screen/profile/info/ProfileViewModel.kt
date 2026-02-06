@@ -92,6 +92,12 @@ class ProfileViewModel (
                 ProfileMenu.PRIVACY_POLICY -> {
                     /** action to navigate to privacy policy */
                 }
+                ProfileMenu.DELETE_ACCOUNT -> {
+                    /** action to delete account */
+                }
+                ProfileMenu.LOGOUT -> {
+                    toggleConfirmLogout(confirm = true)
+                }
             }
         }
     }

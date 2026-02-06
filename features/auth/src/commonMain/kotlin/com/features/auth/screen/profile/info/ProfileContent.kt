@@ -5,14 +5,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
@@ -36,7 +34,6 @@ import com.features.auth.screen.profile.section.ProfileCard
 import com.resources.Res
 import com.resources.confirm_logout_message
 import com.resources.confirm_logout_title
-import com.resources.logout
 import com.resources.stay_here
 import com.resources.yes_logout
 import org.jetbrains.compose.resources.stringResource
@@ -94,21 +91,6 @@ internal fun ProfileContent(
                     }
                 }
             }
-        }
-
-        Spacer(modifier = Modifier.weight(weight = 1f))
-        Button(
-            colors = ButtonDefaults.buttonColors(
-                contentColor = AppTheme.colors.onError,
-                containerColor = AppTheme.colors.error
-            ),
-            onClick = {
-                dispatcher(ProfileAction.ToggleConfirmLogout(confirm = true))
-            },
-            modifier = Modifier.fillMaxWidth()
-                .padding(vertical = AppTheme.dimens.default)
-        ) {
-            Text(text = stringResource(Res.string.logout))
         }
     }
 

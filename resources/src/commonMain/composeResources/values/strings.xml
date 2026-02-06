@@ -30,7 +30,9 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="others">Others</string>
     <string name="preferences">Preferences</string>
+    <string name="security">Security</string>
     <string name="logout">Logout</string>
+    <string name="delete_account">Delete Account</string>
     <string name="confirm_logout_title">Already Leaving?</string>
     <string name="confirm_logout_message">We'll keep an eye on your account while you're gone. And we will miss you a lot.</string>
     <string name="yes_logout">Yes, Logout</string>

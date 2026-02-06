@@ -27,7 +27,10 @@ fun LabeledRow(
     caption: String? = null,
     leadingContent: @Composable (() -> Unit)? = {
         ShowViewIfNotNull(value = image) {
-            Icon(imageVector = it, contentDescription = label)
+            Icon(
+                imageVector = it,
+                contentDescription = label
+            )
         }
     },
     trailingContent: @Composable (() -> Unit)? = null,
@@ -51,7 +54,10 @@ fun LabeledRow(
     ) {
         leadingContent?.invoke()
         Column(modifier = Modifier.weight(weight = 1f)) {
-            Text(text = label, fontWeight = FontWeight(450))
+            Text(
+                text = label,
+                fontWeight = FontWeight(450)
+            )
             ShowViewIfNotNull(value = caption) {
                 CaptionText(
                     value = it,
