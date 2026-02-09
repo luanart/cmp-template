@@ -57,26 +57,6 @@ fun rememberScreenType(): ScreenType {
 }
 
 @Composable
-fun <T : ViewEffect> LaunchedViewEffect(effect: Flow<T>, onEvent: suspend (T) -> Unit) {
-    val lifecycleOwner = LocalLifecycleOwner.current
-    LaunchedEffect(effect, lifecycleOwner.lifecycle) {
-        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            effect.collect(onEvent)
-        }
-    }
-}
-
-@Composable
-fun ShowViewIf(visible: Boolean, content: @Composable () -> Unit) {
-    if (visible) content()
-}
-
-@Composable
-fun <T> ShowViewIfNotNull(value: T?, content: @Composable (T) -> Unit) {
-    if (value != null) content(value)
-}
-
-@Composable
 fun <T> rememberItemsOrDummies(
     items: PersistentList<T>,
     loading: Boolean,
@@ -89,4 +69,20 @@ fun <T> rememberItemsOrDummies(
     }
 
     return remember { derivedStateOf { if (loading) dummyItems else items } }.value
+}
+
+@Composable
+fun ShowViewIf(visible: Boolean, content: @Composable () -> Unit) {
+    if (visible) content()
+}
+
+@Suppress("ParamsComparedByRef")
+@Composable
+fun <T : ViewEffect> LaunchedViewEffect(effect: Flow<T>, onEvent: suspend (T) -> Unit) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(effect, lifecycleOwner.lifecycle) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            effect.collect(onEvent)
+        }
+    }
 }

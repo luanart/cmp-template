@@ -21,9 +21,7 @@ internal fun ProfileScreen() {
 
     LaunchedViewEffect(viewModel.effect) { effect ->
         when(effect) {
-            is ProfileEffect.NavigateToForm -> {
-                navigator.navigate(effect.route)
-            }
+            is ProfileEffect.NavigateToForm -> navigator.navigate(effect.route)
         }
     }
 

@@ -18,9 +18,7 @@ internal fun LoginScreen() {
 
     LaunchedViewEffect(viewModel.effect) { effect ->
         when(effect) {
-            is LoginEffect.NavigateToRegister -> {
-                navigator.navigate(effect.route)
-            }
+            is LoginEffect.NavigateToRegister -> navigator.navigate(effect.route)
         }
     }
 

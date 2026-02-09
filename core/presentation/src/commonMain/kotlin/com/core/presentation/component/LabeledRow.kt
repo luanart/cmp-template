@@ -15,10 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.core.presentation.theme.AppTheme
-import com.core.presentation.util.ShowViewIfNotNull
 import com.core.presentation.extension.applyIf
 import com.core.presentation.extension.shimmer
+import com.core.presentation.theme.AppTheme
 
 @Composable
 fun LabeledRow(
@@ -28,7 +27,7 @@ fun LabeledRow(
     caption: String? = null,
     loading: Boolean = false,
     leadingContent: @Composable (() -> Unit)? = {
-        ShowViewIfNotNull(value = image) {
+        image?.let {
             Icon(
                 imageVector = it,
                 contentDescription = label
@@ -61,7 +60,7 @@ fun LabeledRow(
                 fontWeight = FontWeight(450),
                 modifier = Modifier.shimmer(show = loading)
             )
-            ShowViewIfNotNull(value = caption) {
+            caption?.let {
                 CaptionText(
                     value = it,
                     color = AppTheme.colors.onSurfaceVariant,

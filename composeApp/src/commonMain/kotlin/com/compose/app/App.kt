@@ -1,41 +1,55 @@
 package com.compose.app
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.produceState
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
+import com.compose.app.enums.NavItem.Companion.activeItem
+import com.compose.app.ui.app.NavAction
+import com.compose.app.ui.app.NavEffect
 import com.compose.app.ui.app.NavigationContent
+import com.compose.app.ui.app.NavigationViewModel
 import com.compose.app.util.SetStatusBarStyle
-import com.core.data.local.LocalStorage
 import com.core.presentation.theme.AppTheme
+import com.core.presentation.util.LaunchedViewEffect
+import com.navigation.LocalNavigator
 import com.navigation.navigateAsStart
-import com.navigation.startDestination
-import kotlinx.coroutines.delay
-import org.koin.compose.koinInject
+import com.navigation.navigateAsTopNav
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun App() {
-    val local = koinInject<LocalStorage>()
+    val viewModel = koinViewModel<NavigationViewModel>()
     val navController = rememberNavController()
 
-    val userId by local.userId.collectAsStateWithLifecycle(initialValue = null)
-    val darkMode by local.darkMode.collectAsStateWithLifecycle(initialValue = false)
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
-    val isLoaded by produceState(initialValue = false, local.userId) {
-        local.userId.collect { value = true }
-    }
-
-    LaunchedEffect(isLoaded, userId) {
-        if (isLoaded) {
-            delay(300)
-            navController.navigateAsStart(startDestination(userId))
+    LaunchedViewEffect(viewModel.effect) { effect ->
+        when(effect) {
+            is NavEffect.NavigateToNavItem -> navController.navigateAsTopNav(effect.route)
+            is NavEffect.NavigateToStartDest -> navController.navigateAsStart(effect.route)
         }
     }
 
-    AppTheme(isDarkMode = darkMode) {
-        SetStatusBarStyle(isDarkMode = darkMode)
-        NavigationContent(navController = navController)
+    LaunchedEffect(navController) {
+        navController.currentBackStackEntryFlow.collect {
+            val activeNavItem = state.navItems.activeItem(it)
+            if (state.selectedNavItem != activeNavItem) {
+                viewModel.handleAction(NavAction.UpdateSelectedNavItem(activeNavItem))
+            }
+        }
+    }
+
+    AppTheme(isDarkMode = state.darkMode) {
+        SetStatusBarStyle(isDarkMode = state.darkMode)
+        CompositionLocalProvider(value = LocalNavigator provides navController) {
+            NavigationContent(
+                navItems = state.navItems,
+                selected = state.selectedNavItem,
+                navController = navController
+            )
+        }
     }
 }
