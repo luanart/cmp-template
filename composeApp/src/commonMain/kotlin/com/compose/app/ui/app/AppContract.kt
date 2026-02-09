@@ -10,15 +10,15 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 
 @Immutable
-data class NavState(
+data class AppState(
     val darkMode: Boolean = false,
     val navItems: PersistentList<NavItem> = NavItem.entries.toPersistentList(),
     val selectedNavItem: NavItem? = NavItem.HOME
 ) : ViewState
 
-sealed interface NavAction : ViewAction {
-    data class NavigateTo(val route: NavRoute) : NavAction
-    data class UpdateSelectedNavItem(val item: NavItem?) : NavAction
+sealed interface AppAction : ViewAction {
+    data class NavigateTo(val route: NavRoute) : AppAction
+    data class UpdateSelectedAppItem(val item: NavItem?) : AppAction
 }
 
 sealed interface NavEffect : ViewEffect {

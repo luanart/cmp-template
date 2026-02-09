@@ -22,7 +22,7 @@ import kotlinx.collections.immutable.PersistentList
 
 @Suppress("ParamsComparedByRef")
 @Composable
-fun NavigationContent(
+fun AppContent(
     navItems: PersistentList<NavItem>,
     selected: NavItem?,
     navController: NavHostController

@@ -7,10 +7,10 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.compose.app.enums.NavItem.Companion.activeItem
-import com.compose.app.ui.app.NavAction
+import com.compose.app.ui.app.AppAction
 import com.compose.app.ui.app.NavEffect
-import com.compose.app.ui.app.NavigationContent
-import com.compose.app.ui.app.NavigationViewModel
+import com.compose.app.ui.app.AppContent
+import com.compose.app.ui.app.AppViewModel
 import com.compose.app.util.SetStatusBarStyle
 import com.core.presentation.theme.AppTheme
 import com.core.presentation.util.LaunchedViewEffect
@@ -21,8 +21,8 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun App() {
-    val viewModel = koinViewModel<NavigationViewModel>()
     val navController = rememberNavController()
+    val viewModel = koinViewModel<AppViewModel>()
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -37,7 +37,7 @@ fun App() {
         navController.currentBackStackEntryFlow.collect {
             val activeNavItem = state.navItems.activeItem(it)
             if (state.selectedNavItem != activeNavItem) {
-                viewModel.handleAction(NavAction.UpdateSelectedNavItem(activeNavItem))
+                viewModel.handleAction(AppAction.UpdateSelectedAppItem(activeNavItem))
             }
         }
     }
@@ -45,7 +45,7 @@ fun App() {
     AppTheme(isDarkMode = state.darkMode) {
         SetStatusBarStyle(isDarkMode = state.darkMode)
         CompositionLocalProvider(value = LocalNavigator provides navController) {
-            NavigationContent(
+            AppContent(
                 navItems = state.navItems,
                 selected = state.selectedNavItem,
                 navController = navController

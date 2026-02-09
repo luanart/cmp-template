@@ -1,6 +1,6 @@
 package com.compose.app.di
 
-import com.compose.app.ui.app.NavigationViewModel
+import com.compose.app.ui.app.AppViewModel
 import com.core.data.di.DataModule
 import com.features.auth.di.AuthModule
 import com.features.home.di.HomeModule
@@ -10,5 +10,5 @@ import org.koin.ksp.generated.module
 
 val appModule = module {
     includes(DataModule().module, AuthModule().module, HomeModule().module)
-    viewModelOf(::NavigationViewModel)
+    viewModelOf(::AppViewModel)
 }

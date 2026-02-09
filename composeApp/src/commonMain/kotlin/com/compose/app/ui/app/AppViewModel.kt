@@ -8,17 +8,17 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
-class NavigationViewModel(
+class AppViewModel(
     private val localStorage: LocalStorage
-) : BaseViewModel<NavState, NavAction, NavEffect>(
-    initialState = NavState()
+) : BaseViewModel<AppState, AppAction, NavEffect>(
+    initialState = AppState()
 ) {
-    override fun handleAction(action: NavAction) {
+    override fun handleAction(action: AppAction) {
         when(action) {
-            is NavAction.NavigateTo -> {
+            is AppAction.NavigateTo -> {
                 postEffect(effect = NavEffect.NavigateToNavItem(action.route))
             }
-            is NavAction.UpdateSelectedNavItem -> {
+            is AppAction.UpdateSelectedAppItem -> {
                 updateState { copy(selectedNavItem = action.item) }
             }
         }
