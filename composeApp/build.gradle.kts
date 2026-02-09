@@ -34,7 +34,6 @@ kotlin {
 
             // dependencies
             implementation(libs.koin.compose)
-            implementation(libs.koin.viewmodel)
             implementation(libs.navigation.event)
 
             // features
