@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.core.presentation.component.LabeledRow
 import com.core.presentation.theme.AppTheme
 import com.core.presentation.util.ShowViewIf
-import com.core.presentation.util.cardContainer
+import com.core.presentation.extension.cardContainer
 import com.core.presentation.widget.ConfirmationDialog
 import com.features.auth.enums.ProfileMenu
 import com.features.auth.enums.ProfileMenuAction

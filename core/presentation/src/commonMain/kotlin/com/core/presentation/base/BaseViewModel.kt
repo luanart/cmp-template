@@ -5,7 +5,7 @@ package com.core.presentation.base
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.core.presentation.data.AppError
-import com.core.presentation.util.toAppError
+import com.core.presentation.extension.toAppError
 import com.firebase.analytics.AnalyticsTracker
 import com.firebase.analytics.NoOpAnalyticsTracker
 import kotlinx.coroutines.CoroutineScope

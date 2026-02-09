@@ -1,4 +1,4 @@
-package com.core.presentation.util
+package com.core.presentation.extension
 
 import com.core.common.error.ApiError
 import com.core.common.error.AppException

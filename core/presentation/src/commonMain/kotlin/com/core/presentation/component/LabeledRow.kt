@@ -17,7 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.core.presentation.theme.AppTheme
 import com.core.presentation.util.ShowViewIfNotNull
-import com.core.presentation.util.applyIf
+import com.core.presentation.extension.applyIf
+import com.core.presentation.extension.shimmer
 
 @Composable
 fun LabeledRow(
@@ -25,6 +26,7 @@ fun LabeledRow(
     modifier: Modifier = Modifier,
     image: ImageVector? = null,
     caption: String? = null,
+    loading: Boolean = false,
     leadingContent: @Composable (() -> Unit)? = {
         ShowViewIfNotNull(value = image) {
             Icon(
@@ -56,12 +58,14 @@ fun LabeledRow(
         Column(modifier = Modifier.weight(weight = 1f)) {
             Text(
                 text = label,
-                fontWeight = FontWeight(450)
+                fontWeight = FontWeight(450),
+                modifier = Modifier.shimmer(show = loading)
             )
             ShowViewIfNotNull(value = caption) {
                 CaptionText(
                     value = it,
                     color = AppTheme.colors.onSurfaceVariant,
+                    modifier = Modifier.shimmer(show = loading)
                 )
             }
         }
