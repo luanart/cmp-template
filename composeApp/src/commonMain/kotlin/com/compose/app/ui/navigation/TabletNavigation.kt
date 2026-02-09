@@ -5,7 +5,6 @@ import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import com.compose.app.enums.NavItem
 import kotlinx.collections.immutable.PersistentList
 import org.jetbrains.compose.resources.stringResource
 

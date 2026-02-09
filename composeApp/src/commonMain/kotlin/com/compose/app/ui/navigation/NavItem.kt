@@ -1,4 +1,4 @@
-package com.compose.app.enums
+package com.compose.app.ui.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle

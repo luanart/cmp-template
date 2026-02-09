@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationEventHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
-import com.compose.app.enums.NavItem
+import com.compose.app.ui.navigation.NavItem
 import com.compose.app.ui.AppTopBar
 import com.compose.app.util.BackPressHandlers
 import com.core.presentation.component.CustomSnackbarHost

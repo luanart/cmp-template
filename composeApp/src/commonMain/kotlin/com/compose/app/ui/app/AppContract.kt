@@ -1,7 +1,7 @@
 package com.compose.app.ui.app
 
 import androidx.compose.runtime.Immutable
-import com.compose.app.enums.NavItem
+import com.compose.app.ui.navigation.NavItem
 import com.core.presentation.base.ViewAction
 import com.core.presentation.base.ViewEffect
 import com.core.presentation.base.ViewState

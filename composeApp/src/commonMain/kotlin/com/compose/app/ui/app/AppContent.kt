@@ -10,7 +10,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.compose.app.buildNavigation
-import com.compose.app.enums.NavItem
+import com.compose.app.ui.navigation.NavItem
 import com.compose.app.ui.NavScaffold
 import com.compose.app.util.NavTransitions
 import com.core.presentation.util.LocalScaffoldState

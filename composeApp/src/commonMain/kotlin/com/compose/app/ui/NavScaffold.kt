@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.compose.app.enums.NavItem
+import com.compose.app.ui.navigation.NavItem
 import com.compose.app.ui.layout.BasicLayout
 import com.compose.app.ui.navigation.PhoneNavigation
 import com.compose.app.ui.navigation.TabletNavigation

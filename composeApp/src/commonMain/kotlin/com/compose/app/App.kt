@@ -6,7 +6,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
-import com.compose.app.enums.NavItem.Companion.activeItem
+import com.compose.app.ui.navigation.NavItem.Companion.activeItem
 import com.compose.app.ui.app.AppAction
 import com.compose.app.ui.app.NavEffect
 import com.compose.app.ui.app.AppContent
