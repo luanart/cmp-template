@@ -1,94 +1,32 @@
 package com.compose.app
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.compose.app.enums.NavItem.Companion.activeItem
-import com.compose.app.ui.NavScaffold
-import com.compose.app.util.NavTransitions
+import com.compose.app.ui.app.NavigationContent
+import com.compose.app.util.LaunchAppRouter
 import com.compose.app.util.SetStatusBarStyle
+import com.core.data.local.LocalStorage
 import com.core.presentation.theme.AppTheme
-import com.core.presentation.util.LaunchedViewEffect
-import com.core.presentation.util.LocalScaffoldState
-import com.core.presentation.util.ScaffoldState
-import com.core.presentation.util.rememberScreenType
-import com.navigation.LocalNavigator
-import com.navigation.NavRoute
-import com.navigation.navigateAsStart
-import com.navigation.navigateAsTopNav
-import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun App() {
-    val viewModel = koinViewModel<AppViewModel>()
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val local = koinInject<LocalStorage>()
+    val userId by local.userId.collectAsStateWithLifecycle(initialValue = null)
+    val darkMode by local.darkMode.collectAsStateWithLifecycle(initialValue = false)
 
-    val screenType = rememberScreenType()
     val navController = rememberNavController()
-    val scaffoldState = rememberSaveable(saver = ScaffoldState.Saver) { ScaffoldState() }
 
-    LaunchedViewEffect(viewModel.effect) { effect ->
-        when(effect) {
-            is AppEffect.NavigateToNavItem -> navController.navigateAsTopNav(effect.route)
-            is AppEffect.NavigateToStartDest -> navController.navigateAsStart(effect.route)
-        }
-    }
+    LaunchAppRouter(
+        userId = userId,
+        navController = navController,
+        minimumSplashDurationMs = 300
+    )
 
-    LaunchedEffect(navController) {
-        navController.currentBackStackEntryFlow.collect {
-            val activeNavItem = state.navItems.activeItem(it)
-            if (state.selectedNavItem != activeNavItem) {
-                viewModel.handleAction(AppAction.UpdateSelectedNavItem(activeNavItem))
-            }
-        }
-    }
-
-    AppTheme(isDarkMode = state.darkMode) {
-        SetStatusBarStyle(isDarkMode = state.darkMode)
-        CompositionLocalProvider(
-            LocalNavigator provides navController,
-            LocalScaffoldState provides scaffoldState
-        ) {
-            NavScaffold(
-                state = scaffoldState,
-                navItems = state.navItems,
-                selected = state.selectedNavItem,
-                screenType = screenType,
-                onNavigate = {
-                    viewModel.handleAction(AppAction.NavigateTo(it.route))
-                },
-                primaryActionContent = {
-                    FloatingActionButton(
-                        onClick = {
-                            viewModel.handleAction(AppAction.NavigateTo(NavRoute.Test))
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Add,
-                            contentDescription = null
-                        )
-                    }
-                },
-            ) {
-                NavHost(
-                    navController = navController,
-                    startDestination = NavRoute.Splash,
-                    enterTransition = { NavTransitions.enter() },
-                    exitTransition = { NavTransitions.exit() },
-                    popEnterTransition = { NavTransitions.popEnter() },
-                    popExitTransition = { NavTransitions.popExit() },
-                    builder = { buildNavigation() }
-                )
-            }
-        }
+    AppTheme(isDarkMode = darkMode) {
+        SetStatusBarStyle(isDarkMode = darkMode)
+        NavigationContent(navController = navController)
     }
 }
