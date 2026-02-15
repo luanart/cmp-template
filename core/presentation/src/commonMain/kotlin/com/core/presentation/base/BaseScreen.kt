@@ -2,52 +2,45 @@ package com.core.presentation.base
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import com.core.presentation.component.LocalSnackbarHostState
 import com.core.presentation.component.SnackbarType
 import com.core.presentation.data.AppError
 import com.core.presentation.data.Confirmation
-import com.core.presentation.data.ScreenConfig
-import com.core.presentation.util.LocalScaffoldState
+import com.core.presentation.navigation.LocalScaffoldController
+import com.core.presentation.navigation.ScaffoldConfig
+import com.core.presentation.util.ShowViewIf
 import com.core.presentation.widget.ErrorStateView
 import com.core.presentation.widget.LoadingDialog
+import com.navigation.LocalNavBackStackEntry
 
 @Composable
 fun BaseScreen(
     error: AppError? = null,
-    pageTitle: String = "",
+    pageTitle: String? = null,
     showTopBar: Boolean = true,
     showLoading: Boolean = false,
     loadingText: String = "Please wait...",
     confirmOnBack: Boolean = false,
     backConfirmationData: Confirmation? = null,
     topBarActions: @Composable (RowScope.() -> Unit)? = null,
-    floatingButton: @Composable (() -> Unit)? = null,
+    floatingActionButton: @Composable (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
-    val scaffoldState = LocalScaffoldState.current
+
     val snackbarHostState = LocalSnackbarHostState.current
+    val scaffoldController = LocalScaffoldController.current
 
-    val currentTopBarActions by rememberUpdatedState(topBarActions)
-    val currentFloatingButton by rememberUpdatedState(floatingButton)
+    val entry = LocalNavBackStackEntry.current
+    val entryId = entry?.id ?: "unknown"
 
-    SideEffect {
-        scaffoldState.updateConfig(
-            config = ScreenConfig(
-                pageTitle = pageTitle,
-                showTopBar = showTopBar,
-                confirmOnBack = confirmOnBack,
-                topBarActions = currentTopBarActions,
-                floatingButton = currentFloatingButton
-            )
-        )
-    }
+    DisposableEffect(entryId) {
+        scaffoldController.setConfig(entryId, ScaffoldConfig(fab = floatingActionButton))
 
-    LaunchedEffect(backConfirmationData) {
-        backConfirmationData?.let { scaffoldState.setBackConfirmationData(it) }
+        onDispose {
+            scaffoldController.removeConfig(entryId)
+        }
     }
 
     LaunchedEffect(error) {

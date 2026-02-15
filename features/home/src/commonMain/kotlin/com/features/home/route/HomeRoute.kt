@@ -3,12 +3,12 @@ package com.features.home.route
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
+import com.core.presentation.extension.screen
 import com.features.home.screen.HomeScreen
 import com.navigation.NavRoute
 
 fun NavGraphBuilder.homeRoute(fadeInDuration: Int) {
-    composable<NavRoute.Home>(
+    screen<NavRoute.Home>(
         enterTransition = { fadeIn(animationSpec = tween(fadeInDuration)) }
     ) {
         HomeScreen()

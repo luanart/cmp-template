@@ -10,6 +10,7 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.bundles.lifecycle)
             implementation(projects.resources)
+            implementation(projects.navigation)
             implementation(projects.core.common)
             implementation(projects.firebase.analytics)
         }

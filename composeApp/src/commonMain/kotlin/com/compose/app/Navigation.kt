@@ -10,16 +10,16 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
 import com.compose.app.util.NAV_ANIM_DURATION
 import com.core.presentation.base.BaseScreen
+import com.core.presentation.extension.screen
 import com.features.auth.route.authRoute
 import com.features.auth.route.profileRoute
 import com.features.home.route.homeRoute
 import com.navigation.NavRoute
 
 fun NavGraphBuilder.buildNavigation() {
-    composable<NavRoute.Splash>(
+    screen<NavRoute.Splash>(
         enterTransition = { fadeIn(animationSpec = tween(NAV_ANIM_DURATION)) },
         exitTransition = { fadeOut(animationSpec = tween(NAV_ANIM_DURATION)) }
     ) {
@@ -30,8 +30,8 @@ fun NavGraphBuilder.buildNavigation() {
         }
     }
 
-    composable<NavRoute.Test> {
-        BaseScreen(confirmOnBack = true) {
+    screen<NavRoute.Test> {
+        BaseScreen {
             Text("TEST SCREEN")
         }
     }

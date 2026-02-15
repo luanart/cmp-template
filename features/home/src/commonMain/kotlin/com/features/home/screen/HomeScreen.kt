@@ -1,5 +1,9 @@
 package com.features.home.screen
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddHome
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -19,7 +23,17 @@ fun HomeScreen() {
 
     BaseScreen(
         error = error,
-        pageTitle = stringResource(Res.string.home)
+        pageTitle = stringResource(Res.string.home),
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {}
+            ) {
+                Icon(
+                    imageVector = Icons.Default.AddHome,
+                    contentDescription = null
+                )
+            }
+        }
     ) {
         HomeContent(state = state, dispatcher = viewModel::handleAction)
     }
