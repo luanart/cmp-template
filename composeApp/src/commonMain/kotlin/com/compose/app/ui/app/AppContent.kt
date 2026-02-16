@@ -11,7 +11,6 @@ import com.compose.app.buildNavigation
 import com.compose.app.ui.NavScaffold
 import com.compose.app.ui.navigation.NavItem
 import com.compose.app.util.NavTransitions
-import com.core.presentation.util.rememberScreenType
 import com.navigation.NavRoute
 import com.navigation.navigateAsTopNav
 import kotlinx.collections.immutable.PersistentList
@@ -26,7 +25,6 @@ fun AppContent(
     NavScaffold(
         navItems = navItems,
         selected = selected,
-        screenType = rememberScreenType(),
         onNavigate = {
             navController.navigateAsTopNav(it.route)
         },
