@@ -8,4 +8,7 @@ interface ViewAction {
 
 interface ViewEffect
 
-interface ViewState
+interface ViewState {
+    val pageLoading: Boolean
+        get() = false
+}

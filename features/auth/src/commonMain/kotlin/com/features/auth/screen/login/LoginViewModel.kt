@@ -28,11 +28,11 @@ class LoginViewModel (
     }
 
     private fun showLoading() {
-        updateState { copy(loading = true) }
+        updateState { copy(pageLoading = true) }
     }
 
     private fun hideLoading() {
-        updateState { copy(loading = false) }
+        updateState { copy(pageLoading = false) }
     }
 
     private fun navigateToRegisterScreen() {

@@ -4,8 +4,6 @@ package com.core.presentation.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.core.presentation.data.AppError
-import com.core.presentation.extension.toAppError
 import com.firebase.analytics.AnalyticsTracker
 import com.firebase.analytics.NoOpAnalyticsTracker
 import kotlinx.coroutines.CoroutineScope
@@ -40,13 +38,8 @@ abstract class BaseViewModel<S : ViewState, A : ViewAction, E : ViewEffect>(
     private val _effect = Channel<E>(Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
 
-    private val _appError = MutableStateFlow<AppError?>(null)
-    val appError: StateFlow<AppError?> = _appError
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = null
-        )
+    private val _error = Channel<Throwable>(Channel.BUFFERED)
+    val error = _error.receiveAsFlow()
 
     private val didDataLoaded = AtomicBoolean(false)
 
@@ -91,9 +84,7 @@ abstract class BaseViewModel<S : ViewState, A : ViewAction, E : ViewEffect>(
     }
 
     protected fun sendError(throwable: Throwable) {
-        viewModelScope.launch {
-            _appError.update { throwable.toAppError(onClear = ::clearError, onRetry = ::retry) }
-        }
+        _error.trySend(throwable)
     }
 
     protected fun updateState(transform: S.() -> S) {
@@ -114,14 +105,9 @@ abstract class BaseViewModel<S : ViewState, A : ViewAction, E : ViewEffect>(
 
     fun retry(): Boolean {
         return pendingRetryAction?.let { action ->
-            clearError()
             action()
             true
         } ?: false
-    }
-
-    fun clearError() {
-        _appError.update { null }
     }
 
     override fun onCleared() {

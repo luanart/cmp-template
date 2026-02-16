@@ -8,7 +8,10 @@ import com.features.auth.data.model.LoginField
 import com.navigation.NavRoute
 
 @Immutable
-data class LoginState(val field: LoginField = LoginField(), val loading: Boolean = false): ViewState
+data class LoginState(
+    val field: LoginField = LoginField(),
+    override val pageLoading: Boolean = false
+): ViewState
 
 sealed interface LoginAction: ViewAction {
     data object Login: LoginAction

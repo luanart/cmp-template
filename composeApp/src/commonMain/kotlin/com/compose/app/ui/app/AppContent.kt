@@ -5,16 +5,12 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.compose.app.buildNavigation
-import com.compose.app.ui.navigation.NavItem
 import com.compose.app.ui.NavScaffold
+import com.compose.app.ui.navigation.NavItem
 import com.compose.app.util.NavTransitions
-import com.core.presentation.util.LocalScaffoldState
-import com.core.presentation.util.ScaffoldState
 import com.core.presentation.util.rememberScreenType
 import com.navigation.NavRoute
 import com.navigation.navigateAsTopNav
@@ -27,41 +23,35 @@ fun AppContent(
     selected: NavItem?,
     navController: NavHostController
 ) {
-    val screenType = rememberScreenType()
-    val scaffoldState = rememberSaveable(saver = ScaffoldState.Saver) { ScaffoldState() }
-
-    CompositionLocalProvider(LocalScaffoldState provides scaffoldState) {
-        NavScaffold(
-            state = scaffoldState,
-            navItems = navItems,
-            selected = selected,
-            screenType = screenType,
-            onNavigate = {
-                navController.navigateAsTopNav(it.route)
-            },
-            primaryActionContent = {
-                FloatingActionButton(
-                    onClick = {
-                        navController.navigateAsTopNav(NavRoute.Test)
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = null
-                    )
+    NavScaffold(
+        navItems = navItems,
+        selected = selected,
+        screenType = rememberScreenType(),
+        onNavigate = {
+            navController.navigateAsTopNav(it.route)
+        },
+        primaryActionContent = {
+            FloatingActionButton(
+                onClick = {
+                    navController.navigateAsTopNav(NavRoute.Test)
                 }
-            },
-            content = {
-                NavHost(
-                    navController = navController,
-                    startDestination = NavRoute.Splash,
-                    enterTransition = { NavTransitions.enter() },
-                    exitTransition = { NavTransitions.exit() },
-                    popEnterTransition = { NavTransitions.popEnter() },
-                    popExitTransition = { NavTransitions.popExit() },
-                    builder = { buildNavigation() }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = null
                 )
             }
-        )
-    }
+        },
+        content = {
+            NavHost(
+                navController = navController,
+                startDestination = NavRoute.Splash,
+                enterTransition = { NavTransitions.enter() },
+                exitTransition = { NavTransitions.exit() },
+                popEnterTransition = { NavTransitions.popEnter() },
+                popExitTransition = { NavTransitions.popExit() },
+                builder = { buildNavigation() }
+            )
+        }
+    )
 }

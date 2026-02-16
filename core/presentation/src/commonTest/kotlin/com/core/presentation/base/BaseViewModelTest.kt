@@ -2,7 +2,6 @@ package com.core.presentation.base
 
 import app.cash.turbine.test
 import com.core.common.error.AppException
-import com.core.presentation.data.AppError
 import com.firebase.analytics.AnalyticsTracker
 import dev.mokkery.answering.returns
 import dev.mokkery.every
@@ -27,8 +26,6 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class BaseViewModelTest : KoinTest {
@@ -153,53 +150,27 @@ class BaseViewModelTest : KoinTest {
     }
 
     @Test
-    fun givenSafeLaunchError_whenOccurs_thenAppErrorIsEmittedWithRetryAction() = runTest {
+    fun givenSafeLaunchError_whenOccurs_thenErrorIsEmittedAndRetryIsPossible() = runTest {
         var retryCount = 0
         val retryAction = { retryCount += 1 }
 
-        viewModel.appError.test {
-            // 1. Initial state is null
-            assertNull(awaitItem())
-
-            // 2. Trigger a failing action with a retry mechanism
+        viewModel.error.test {
+            // 1. Trigger a failing action with a retry mechanism
             viewModel.triggerSafeLaunch(shouldFail = true, onRetry = retryAction)
             advanceUntilIdle()
 
-            // 3. Assert an AppError is emitted
-            val error = awaitItem()
-            assertIs<AppError>(error)
+            // 2. Assert an error is emitted
+            assertIs<AppException.NoInternet>(awaitItem())
 
-            // 4. Invoke the error's action and verify it triggers the retry
-            val retry = error.retryAction
-            assertNotNull(retry, "Retry action should not be null")
-
-            retry()
+            // 3. Invoke retry and verify it triggers the retry action
+            val retried = viewModel.retry()
+            assertEquals(true, retried)
             assertEquals(1, retryCount, "Retry action should be called once.")
 
-            // 5. Verify that the retry action is a one-off by invoking it again.
-            // The underlying pending action in the ViewModel should have been consumed.
-            retry()
-            assertEquals(1, retryCount, "Retry action should not be called again.")
-        }
-    }
-
-    @Test
-    fun givenErrorState_whenClearError_thenErrorIsNull() = runTest {
-        viewModel.appError.test {
-            // Initial state is null
-            assertNull(awaitItem(), "Initial error state should be null")
-
-            // Trigger an error
-            viewModel.triggerSafeLaunch(shouldFail = true)
-            advanceUntilIdle()
-
-            assertIs<AppError>(awaitItem(), "An AppError should be emitted")
-
-            // Clear the error
-            viewModel.clearError()
-
-            // Assert the error is cleared
-            assertNull(awaitItem(), "Error state should be null after clearing")
+            // 4. Verify that the retry action can be called again as it is not consumed.
+            val retriedAgain = viewModel.retry()
+            assertEquals(true, retriedAgain)
+            assertEquals(2, retryCount, "Retry action should be called again.")
         }
     }
 }

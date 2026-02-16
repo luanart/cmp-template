@@ -10,7 +10,7 @@ import org.jetbrains.compose.resources.stringResource
 internal fun EditProfileScreen() {
     BaseScreen(
         pageTitle = stringResource(Res.string.edit_profile),
-        confirmOnBack = true
+        confirmExit = true
     ) {
 
     }

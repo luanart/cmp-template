@@ -47,7 +47,7 @@ internal fun LoginContent(
     val validators by getLoginValidators(state.field)
 
     Form(
-        clearFocus = state.loading,
+        clearFocus = state.pageLoading,
         verticalArrangement = Arrangement.spacedBy(
             space = AppTheme.dimens.default,
             alignment = Alignment.CenterVertically

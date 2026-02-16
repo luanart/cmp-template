@@ -23,15 +23,15 @@ fun NavGraphBuilder.buildNavigation() {
         enterTransition = { fadeIn(animationSpec = tween(NAV_ANIM_DURATION)) },
         exitTransition = { fadeOut(animationSpec = tween(NAV_ANIM_DURATION)) }
     ) {
-        BaseScreen(showTopBar = false) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
         }
     }
 
     screen<NavRoute.Test> {
-        BaseScreen {
+        BaseScreen(
+            pageTitle = "",
+        ) {
             Text("TEST SCREEN")
         }
     }

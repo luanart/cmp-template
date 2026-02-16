@@ -5,19 +5,20 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.compose.app.ui.navigation.NavItem
-import com.compose.app.ui.layout.BasicLayout
 import com.compose.app.ui.navigation.PhoneNavigation
 import com.compose.app.ui.navigation.TabletNavigation
 import com.core.presentation.data.ScreenType
-import com.core.presentation.util.ScaffoldState
+import com.core.presentation.navigation.AppScaffold
+import com.core.presentation.util.BackHandler
 import com.core.presentation.util.rememberScreenType
+import com.navigation.LocalNavigator
 import kotlinx.collections.immutable.PersistentList
 
 @Composable
 fun NavScaffold(
-    state: ScaffoldState,
     navItems: PersistentList<NavItem>,
     selected: NavItem?,
     onNavigate: (NavItem) -> Unit,
@@ -25,12 +26,17 @@ fun NavScaffold(
     primaryActionContent: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
+
+    val navigator = LocalNavigator.current
+    val backHandler = remember(navigator, selected) {
+        BackHandler(isTopNavigation = selected != null, navigator = navigator)
+    }
+
     when(screenType) {
         ScreenType.Compact -> {
-            BasicLayout(
-                state = state,
-                navItem = selected,
-                bottomBar = {
+            AppScaffold(
+                backHandler = backHandler,
+                navigation = {
                     PhoneNavigation(
                         selected = selected,
                         navItems = navItems,
@@ -54,9 +60,8 @@ fun NavScaffold(
                         primaryActionContent = primaryActionContent,
                     )
                 }
-                BasicLayout(
-                    state = state,
-                    navItem = selected,
+                AppScaffold(
+                    backHandler = backHandler,
                     content = content
                 )
             }

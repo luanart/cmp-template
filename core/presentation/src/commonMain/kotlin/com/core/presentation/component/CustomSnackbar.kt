@@ -42,7 +42,7 @@ class CustomSnackbarHostState {
     var iconVector by mutableStateOf<ImageVector?>(null)
         private set
 
-    suspend fun showSnackbar(
+    suspend fun show(
         message: String,
         snackType: SnackbarType = SnackbarType.INFO,
         actionLabel: String? = null,
