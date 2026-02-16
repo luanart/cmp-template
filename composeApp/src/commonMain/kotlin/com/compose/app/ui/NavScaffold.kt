@@ -5,14 +5,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.compose.app.ui.navigation.NavItem
 import com.compose.app.ui.navigation.PhoneNavigation
 import com.compose.app.ui.navigation.TabletNavigation
 import com.core.presentation.data.ScreenType
 import com.core.presentation.navigation.AppScaffold
-import com.core.presentation.util.BackHandler
+import com.core.presentation.util.rememberBackHandler
 import com.core.presentation.util.rememberScreenType
 import com.navigation.LocalNavigator
 import kotlinx.collections.immutable.PersistentList
@@ -28,9 +27,7 @@ fun NavScaffold(
 ) {
 
     val navigator = LocalNavigator.current
-    val backHandler = remember(navigator, selected) {
-        BackHandler(isTopNavigation = selected != null, navigator = navigator)
-    }
+    val backHandler = rememberBackHandler(navigator = navigator, isNavItem = selected != null)
 
     when(screenType) {
         ScreenType.Compact -> {
