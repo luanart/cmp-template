@@ -9,11 +9,14 @@ import androidx.core.view.WindowCompat
 @Composable
 actual fun SetStatusBarStyle(isDarkMode: Boolean) {
     val view = LocalView.current
+
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            val insetCompat = WindowCompat.getInsetsController(window, view)
-            insetCompat.isAppearanceLightStatusBars = !isDarkMode
+            WindowCompat.getInsetsController(window, view).apply {
+                isAppearanceLightStatusBars = !isDarkMode
+                isAppearanceLightNavigationBars = !isDarkMode
+            }
         }
     }
 }
