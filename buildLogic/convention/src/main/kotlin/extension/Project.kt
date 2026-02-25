@@ -9,6 +9,7 @@ import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.getByType
+import java.util.Properties
 
 internal fun Project.getProperty(name: String, default: String = "") : String {
     return providers.gradleProperty(name).getOrElse(default)
@@ -41,6 +42,13 @@ internal fun Project.getDynamicNameSpace(): String {
         .let { "com$it" }
 }
 
+private fun Project.properties(name: String): String {
+    val properties = Properties().apply {
+        load(project.rootProject.file("keystore.properties").reader())
+    }
+    return properties.getProperty(name, "")
+}
+
 internal fun Project.configureAndroid(extension: ApplicationExtension) {
     extension.apply {
         compileSdk = findProperty("android.targetSdk").toString().toInt()
@@ -54,11 +62,20 @@ internal fun Project.configureAndroid(extension: ApplicationExtension) {
             minSdk = findProperty("android.minSdk").toString().toInt()
             targetSdk = getProperty("android.targetSdk").toInt()
         }
+        signingConfigs {
+            create("release") {
+                keyAlias = properties("key.alias")
+                keyPassword = properties("key.password")
+                storeFile = file(properties("store.file"))
+                storePassword = properties("store.password")
+            }
+        }
         buildTypes {
             getByName("debug") {
                 applicationIdSuffix = ".debug"
             }
             getByName("release") {
+                signingConfig = signingConfigs.getByName("release")
                 isMinifyEnabled = true
                 isShrinkResources = true
                 proguardFiles(
