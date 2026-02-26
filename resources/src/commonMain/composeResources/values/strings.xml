@@ -1,6 +1,6 @@
 <resources>
-    <string name="stay_here">Stay here</string>
-    <string name="yes_leave">Yes, leave</string>
+    <string name="stay_here">Stay Here</string>
+    <string name="yes_leave">Yes, Leave</string>
     <string name="leave_page_title">Leave this page?</string>
     <string name="leave_page_message">It looks like you have unsaved changes. If you leave now, your progress may be lost.</string>
     <string name="default_placeholder">Enter your %1$s</string>
@@ -8,13 +8,13 @@
     <!-- Error message -->
     <string name="err_unknown">An unknown error occurred.</string>
     <string name="err_no_internet">No internet connection. Please check your network and try again.</string>
-    <string name="err_expired_session">Authentication has expired, please login again.</string>
+    <string name="err_expired_session">Authentication has expired, please log in again.</string>
     <!-- Validations -->
     <string name="err_field_required">The %1$s field is required.</string>
     <string name="err_field_not_valid_format">The %1$s format is invalid.</string>
     <!-- Auth module -->
     <string name="login">Login</string>
-    <string name="login_instruction">Login to your Account</string>
+    <string name="login_instruction">login to your Account</string>
     <string name="login_instruction_caption">Enter your username and password to login</string>
     <string name="login_asking_for_register">Don't have an account?</string>
     <string name="password">Password</string>
@@ -35,6 +35,6 @@
     <string name="delete_account">Delete Account</string>
     <string name="confirm_logout_title">Already Leaving?</string>
     <string name="confirm_logout_message">We'll keep an eye on your account while you're gone. And we will miss you a lot.</string>
-    <string name="yes_logout">Yes, logout</string>
+    <string name="yes_logout">Yes, Logout</string>
     <string name="edit_profile">Edit Profile</string>
 </resources>
