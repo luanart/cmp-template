@@ -12,14 +12,7 @@ import com.core.presentation.data.Confirmation
 import com.navigation.canGoBack
 
 @Stable
-class BackHandler(
-    initialCanGoBack: Boolean = false,
-    initialShowConfirmation: Boolean = false,
-    private val navigator: NavController,
-) {
-    var canGoBack by mutableStateOf(initialCanGoBack)
-        private set
-
+class BackHandler(initialShowConfirmation: Boolean = false, private val navigator: NavController) {
     var showConfirmation by mutableStateOf(initialShowConfirmation)
         private set
 
@@ -53,23 +46,14 @@ class BackHandler(
 
 @Suppress("ParamsComparedByRef")
 @Composable
-fun rememberBackHandler(navigator: NavController, isNavItem: Boolean): BackHandler {
+fun rememberBackHandler(navigator: NavController): BackHandler {
     return rememberSaveable(
-        isNavItem,
         navigator,
         saver = Saver(
-            save = {
-                listOf(it.canGoBack, it.showConfirmation)
-            },
-            restore = { restored ->
-                BackHandler(
-                    initialCanGoBack = restored[0],
-                    initialShowConfirmation = restored[1],
-                    navigator = navigator,
-                )
-            }
+            save = { listOf(it.showConfirmation) },
+            restore = { BackHandler(initialShowConfirmation = it[0], navigator = navigator) }
         )
     ) {
-        BackHandler(initialCanGoBack = navigator.canGoBack() && !isNavItem, navigator = navigator)
+        BackHandler(navigator = navigator)
     }
 }

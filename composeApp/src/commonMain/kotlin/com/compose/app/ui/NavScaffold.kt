@@ -27,11 +27,12 @@ fun NavScaffold(
 ) {
 
     val navigator = LocalNavigator.current
-    val backHandler = rememberBackHandler(navigator = navigator, isNavItem = selected != null)
+    val backHandler = rememberBackHandler(navigator = navigator)
 
     when(screenType) {
         ScreenType.Compact -> {
             AppScaffold(
+                isTopNavigation = selected != null,
                 backHandler = backHandler,
                 navigation = {
                     PhoneNavigation(
@@ -58,6 +59,7 @@ fun NavScaffold(
                     )
                 }
                 AppScaffold(
+                    isTopNavigation = selected != null,
                     backHandler = backHandler,
                     content = content
                 )

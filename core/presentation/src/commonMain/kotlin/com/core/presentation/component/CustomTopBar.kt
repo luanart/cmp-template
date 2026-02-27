@@ -18,13 +18,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import com.core.presentation.util.BackHandler
 
 @Composable
 fun CustomTopBar(
     title: String,
-    backHandler: BackHandler,
-    confirmExit: Boolean,
+    canGoBack: Boolean,
+    onBackPressed: () -> Unit,
     topBarActions: @Composable (RowScope.() -> Unit)? = null,
 ) {
     TopAppBar(
@@ -45,11 +44,11 @@ fun CustomTopBar(
         },
         navigationIcon = {
             AnimatedVisibility(
-                visible = backHandler.canGoBack,
+                visible = canGoBack,
                 enter = fadeIn(tween(250)) + expandHorizontally(expandFrom = Alignment.Start),
                 exit = fadeOut(tween(250)) + shrinkHorizontally(shrinkTowards = Alignment.Start)
             ) {
-                IconButton(onClick = { backHandler.backPressed(confirmExit) }) {
+                IconButton(onClick = onBackPressed) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back"

@@ -23,9 +23,11 @@ import com.core.presentation.util.BackHandler
 import com.core.presentation.util.ShowViewIf
 import com.core.presentation.widget.ConfirmationLeavePage
 import com.navigation.LocalNavigator
+import com.navigation.canGoBack
 
 @Composable
 fun AppScaffold(
+    isTopNavigation: Boolean,
     backHandler: BackHandler,
     navigation: @Composable () -> Unit = {},
     content: @Composable () -> Unit,
@@ -54,9 +56,11 @@ fun AppScaffold(
                 currentConfig.title?.let {
                     CustomTopBar(
                         title = it,
-                        backHandler = backHandler,
-                        confirmExit = currentConfig.confirmExit,
-                        topBarActions = currentConfig.topBarActions
+                        canGoBack = navigator.canGoBack() && !isTopNavigation,
+                        topBarActions = currentConfig.topBarActions,
+                        onBackPressed = {
+                            backHandler.backPressed(currentConfig.confirmExit)
+                        },
                     )
                 }
             },
@@ -67,9 +71,7 @@ fun AppScaffold(
                 CustomSnackbarHost(state = snackbarState, modifier = Modifier.imePadding())
             }
         ) {
-            Box(
-                modifier = Modifier.fillMaxSize().padding(paddingValues = it)
-            ) {
+            Box(modifier = Modifier.fillMaxSize().padding(paddingValues = it)) {
                 content()
             }
 
