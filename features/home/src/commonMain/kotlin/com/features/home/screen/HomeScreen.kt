@@ -26,6 +26,7 @@ fun HomeScreen() {
                 )
             }
         },
-        content = ::HomeContent
-    )
+    ) { state, dispatcher ->
+        HomeContent(state, dispatcher)
+    }
 }

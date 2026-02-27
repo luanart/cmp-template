@@ -20,6 +20,7 @@ internal fun ProfileScreen() {
                 is ProfileEffect.NavigateToForm -> navigator.navigate(effect.route)
             }
         },
-        content = ::ProfileContent
-    )
+    ) { state, dispatcher ->
+        ProfileContent(state, dispatcher)
+    }
 }

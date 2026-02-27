@@ -16,6 +16,7 @@ internal fun LoginScreen() {
                 is LoginEffect.NavigateToRegister -> navigator.navigate(effect.route)
             }
         },
-        content = ::LoginContent
-    )
+    ) { state, dispatcher ->
+        LoginContent(state, dispatcher)
+    }
 }
