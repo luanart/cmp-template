@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -24,6 +25,7 @@ fun CustomTopBar(
     title: String,
     backHandler: BackHandler,
     confirmExit: Boolean,
+    topBarActions: @Composable (RowScope.() -> Unit)? = null,
 ) {
     TopAppBar(
         title = {
@@ -54,6 +56,9 @@ fun CustomTopBar(
                     )
                 }
             }
+        },
+        actions = {
+            topBarActions?.invoke(this)
         }
     )
 }

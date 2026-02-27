@@ -1,5 +1,6 @@
 package com.core.presentation.navigation
 
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
 import com.core.presentation.data.Confirmation
@@ -7,7 +8,7 @@ import com.core.presentation.data.Confirmation
 data class ScaffoldConfig(
     val title: String? = "",
     val confirmExit: Boolean = false,
-    val topBar: (@Composable () -> Unit)? = null,
+    val topBarActions: @Composable (RowScope.() -> Unit)? = null,
     val floatingActionButton: (@Composable () -> Unit)? = null,
 )
 

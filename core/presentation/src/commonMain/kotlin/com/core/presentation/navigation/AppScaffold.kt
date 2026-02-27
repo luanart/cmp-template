@@ -51,17 +51,13 @@ fun AppScaffold(
         Scaffold(
             bottomBar = navigation,
             topBar = {
-                when {
-                    currentConfig.topBar != null -> {
-                        currentConfig.topBar.invoke()
-                    }
-                    currentConfig.title != null -> {
-                        CustomTopBar(
-                            title = currentConfig.title,
-                            backHandler = backHandler,
-                            confirmExit = currentConfig.confirmExit
-                        )
-                    }
+                currentConfig.title?.let {
+                    CustomTopBar(
+                        title = it,
+                        backHandler = backHandler,
+                        confirmExit = currentConfig.confirmExit,
+                        topBarActions = currentConfig.topBarActions
+                    )
                 }
             },
             floatingActionButton = {

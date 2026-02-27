@@ -5,6 +5,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -37,7 +38,7 @@ fun <S: ViewState, A: ViewAction, E: ViewEffect> BaseScreen(
     confirmExit: Boolean = false,
     leaveConfirmation: Confirmation? = null,
     onLaunchEffect: suspend (E) -> Unit = {},
-    topBar: (@Composable () -> Unit)? = null,
+    topBarActions: @Composable (RowScope.() -> Unit)? = null,
     floatingActionButton: (@Composable () -> Unit)? = null,
     content: @Composable (state: S, dispatcher: (A) -> Unit) -> Unit
 ) {
@@ -56,7 +57,7 @@ fun <S: ViewState, A: ViewAction, E: ViewEffect> BaseScreen(
         pageTitle,
         confirmExit,
         leaveConfirmation,
-        topBar,
+        topBarActions,
         floatingActionButton
     )
 
@@ -83,7 +84,7 @@ fun BaseScreen(
     pageLoading: Boolean = false,
     confirmExit: Boolean = false,
     leaveConfirmation: Confirmation? = null,
-    topBar: (@Composable () -> Unit)? = null,
+    topBarActions: @Composable (RowScope.() -> Unit)? = null,
     floatingActionButton: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
@@ -94,7 +95,7 @@ fun BaseScreen(
         pageTitle,
         confirmExit,
         leaveConfirmation,
-        topBar,
+        topBarActions,
         floatingActionButton
     )
 
@@ -112,7 +113,7 @@ private fun BaseScreenScaffoldConfig(
     pageTitle: String?,
     confirmExit: Boolean,
     leaveConfirmation: Confirmation?,
-    topBar: (@Composable () -> Unit)?,
+    topBarActions: @Composable (RowScope.() -> Unit)? ,
     floatingActionButton: (@Composable () -> Unit)?
 ) {
     val scaffold = LocalScaffoldController.current
@@ -123,7 +124,7 @@ private fun BaseScreenScaffoldConfig(
             ScaffoldConfig(
                 title = pageTitle,
                 confirmExit = confirmExit,
-                topBar = topBar,
+                topBarActions = topBarActions,
                 floatingActionButton = floatingActionButton,
             )
         )
