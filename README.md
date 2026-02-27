@@ -17,6 +17,14 @@ in your IDE’s toolbar or build it directly from the terminal:
 To build and run the development version of the iOS app, use the run configuration from the run widget
 in your 's toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
 
+Config.xcconfig will updated when you run iosApp based on gradle.properties.
+
+Run this for resolve SPM Package when running from android.
+
+  ```shell
+  xcodebuild -resolvePackageDependencies -project iosApp/iosApp.xcodeproj
+  ```
+
 ### Firebase Android Setup
 To connect the android app to your Firebase project, you'll need to add the `google-services.json` file.
 
