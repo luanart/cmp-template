@@ -4,6 +4,7 @@ import task.generateIosConfig
 plugins {
     alias(libs.plugins.convention.kmp.library)
     alias(libs.plugins.convention.kmp.compose)
+    alias(libs.plugins.convention.kmp.koin)
 }
 
 kotlin {
@@ -28,18 +29,18 @@ kotlin {
             api(projects.firebase.analytics)
             implementation(projects.resources)
             implementation(projects.navigation)
-            implementation(projects.core.common)
             implementation(projects.core.data)
+            implementation(projects.core.common)
             implementation(projects.core.presentation)
-
-            // dependencies
-            implementation(libs.koin.compose)
-            implementation(libs.koin.viewmodel)
-            implementation(libs.navigation.event)
 
             // features
             implementation(projects.features.auth)
             implementation(projects.features.home)
+
+            // dependencies
+            implementation(libs.navigation.event)
+            implementation(libs.bundles.lifecycle)
+            implementation(libs.bundles.koin.compose)
         }
     }
 

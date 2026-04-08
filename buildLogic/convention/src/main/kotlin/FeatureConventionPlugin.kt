@@ -1,10 +1,7 @@
-import extension.addKspCompiler
 import extension.getBundle
-import extension.getLibrary
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.invoke
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
@@ -15,7 +12,7 @@ class FeatureConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("base.kmp.library")
                 apply("base.kmp.compose")
-                apply("base.kmp.ksp")
+                apply("base.kmp.koin")
             }
 
             with(extensions) {
@@ -24,18 +21,14 @@ class FeatureConventionPlugin : Plugin<Project> {
                         commonMain.dependencies {
                             implementation(project(":resources"))
                             implementation(project(":navigation"))
-                            implementation(project(":core:common"))
                             implementation(project(":core:data"))
+                            implementation(project(":core:common"))
                             implementation(project(":core:presentation"))
-                            implementation(getBundle("koin"))
                             implementation(getBundle("lifecycle"))
+                            implementation(getBundle("koin-compose"))
                         }
                     }
                 }
-            }
-
-            dependencies {
-                addKspCompiler(getLibrary("koin-ksp-compiler"))
             }
         }
     }

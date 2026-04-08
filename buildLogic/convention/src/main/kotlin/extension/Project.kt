@@ -54,9 +54,10 @@ internal fun Project.configureAndroid(extension: ApplicationExtension) {
         compileSdk = findProperty("android.targetSdk").toString().toInt()
 
         androidResources {
-            val locales = findProperty("android.localeSupport").toString()
+            val locales = findProperty("app.locale").toString()
                 .replace(" ", "")
-            localeFilters.addAll(locales.split(","))
+                .split(",")
+            localeFilters.addAll(locales)
         }
         defaultConfig {
             minSdk = findProperty("android.minSdk").toString().toInt()

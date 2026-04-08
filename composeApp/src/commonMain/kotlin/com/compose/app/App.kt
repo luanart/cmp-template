@@ -6,11 +6,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
-import com.compose.app.ui.navigation.NavItem.Companion.activeItem
 import com.compose.app.ui.app.AppAction
-import com.compose.app.ui.app.NavEffect
 import com.compose.app.ui.app.AppContent
 import com.compose.app.ui.app.AppViewModel
+import com.compose.app.ui.app.NavEffect
+import com.compose.app.ui.navigation.NavItem.Companion.activeItem
 import com.compose.app.util.SetStatusBarStyle
 import com.core.presentation.theme.AppTheme
 import com.core.presentation.util.LaunchedViewEffect

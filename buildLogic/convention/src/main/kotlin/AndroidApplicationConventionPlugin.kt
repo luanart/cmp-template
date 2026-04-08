@@ -36,7 +36,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 implementation(getBomLibrary("firebase-bom"))
                 implementation(getLibrary("firebase-crashlytics"))
                 implementation(getLibrary("androidx-activity"))
-                implementation(getLibrary("koin-android"))
             }
         }
     }

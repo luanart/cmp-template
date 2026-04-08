@@ -23,9 +23,9 @@ gradlePlugin {
             id = "base.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
-        create("ksp") {
-            id = "base.kmp.ksp"
-            implementationClass = "KspConventionPlugin"
+        create("koin") {
+            id = "base.kmp.koin"
+            implementationClass = "KoinConventionPlugin"
         }
         create("compose") {
             id = "base.kmp.compose"

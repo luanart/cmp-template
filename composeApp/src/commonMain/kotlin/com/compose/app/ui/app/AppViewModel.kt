@@ -7,7 +7,9 @@ import com.navigation.startDestination
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.KoinViewModel
 
+@KoinViewModel
 class AppViewModel(
     private val localStorage: LocalStorage
 ) : BaseViewModel<AppState, AppAction, NavEffect>(

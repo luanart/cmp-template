@@ -1,14 +1,22 @@
 package com.compose.app.di
 
-import org.koin.core.context.startKoin
+import com.core.data.di.DataModule
+import com.features.auth.di.AuthModule
+import com.features.home.di.HomeModule
+import org.koin.core.annotation.KoinApplication
 import org.koin.core.logger.Level
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.includes
+import org.koin.plugin.module.dsl.startKoin
+
+@KoinApplication(modules = [
+    DataModule::class, MainModule::class, AuthModule::class, HomeModule::class
+])
+class KoinApp
 
 fun initKoin(app: KoinAppDeclaration? = null) {
-    startKoin {
-        printLogger(Level.DEBUG)
+    startKoin<KoinApp> {
         includes(app)
-        modules(appModule)
+        printLogger(Level.DEBUG)
     }
 }

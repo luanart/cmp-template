@@ -13,7 +13,7 @@ import com.features.auth.enums.ProfileMenu
 import com.features.auth.enums.ProfileMenuAction
 import com.navigation.NavRoute
 import kotlinx.coroutines.launch
-import org.koin.android.annotation.KoinViewModel
+import org.koin.core.annotation.KoinViewModel
 
 @KoinViewModel
 class ProfileViewModel (

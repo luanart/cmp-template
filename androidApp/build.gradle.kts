@@ -23,3 +23,7 @@ android {
         }
     }
 }
+
+dependencies {
+    implementation(libs.koin.android)
+}

@@ -9,10 +9,12 @@ import com.core.data.remote.api.ApiClient
 import com.core.data.remote.api.ApiService
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
+import org.koin.core.annotation.Configuration
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 
 @Module
+@Configuration
 class NetworkModule {
     @Single
     fun provideConnectivityObserver(contextWrapper: ContextWrapper) : ConnectivityObserver {

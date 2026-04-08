@@ -5,7 +5,7 @@ import com.core.data.repository.api.AuthRepository
 import com.core.presentation.base.BaseViewModel
 import com.features.auth.data.mapper.toDto
 import com.navigation.NavRoute
-import org.koin.android.annotation.KoinViewModel
+import org.koin.core.annotation.KoinViewModel
 
 @KoinViewModel
 class LoginViewModel (
