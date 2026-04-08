@@ -7,6 +7,7 @@ import com.core.data.local.SecureStorage
 import com.core.data.remote.ConnectivityObserver
 import com.core.data.remote.api.ApiClient
 import com.core.data.remote.api.ApiService
+import com.core.data.remote.api.TokenManager
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import org.koin.core.annotation.Configuration
@@ -28,13 +29,22 @@ class NetworkModule {
     fun provideDispatcher() : DispatcherProvider = DefaultDispatcher()
 
     @Single
-    fun provideHttpClient(
+    fun provideTokenManager(
         engine: HttpClientEngine,
         storage: SecureStorage
+    ) : TokenManager = TokenManager(
+        engine = engine,
+        storage = storage
+    )
+
+    @Single
+    fun provideHttpClient(
+        engine: HttpClientEngine,
+        tokenManager: TokenManager
     ) : HttpClient = ApiClient(
         engine = engine,
-        storage = storage,
-        isDebug = isDebuggingMode
+        isDebug = isDebuggingMode,
+        tokenManager = tokenManager
     ).client
 
     @Single
