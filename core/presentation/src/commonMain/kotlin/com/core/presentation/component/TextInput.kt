@@ -10,19 +10,26 @@ import androidx.compose.foundation.text.input.KeyboardActionHandler
 import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AddCircle
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Density
 import com.core.presentation.data.Validator
 import com.core.presentation.theme.AppTheme
+import com.core.presentation.util.ShowViewIf
 import com.core.presentation.util.TextInputDefaults
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
@@ -67,6 +74,25 @@ fun TextInput(
         placeholder = placeholder
     )
 
+    val newTrailingIcon: @Composable () -> Unit = {
+        if (trailingIcon != null) {
+            trailingIcon()
+        } else {
+            ShowViewIf(visible = enabled && state.text.isNotEmpty()) {
+                IconButton(
+                    enabled = !readOnly,
+                    onClick = { state.clearText() },
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.AddCircle,
+                        contentDescription = "Clear",
+                        modifier = Modifier.rotate(45f)
+                    )
+                }
+            }
+        }
+    }
+
     CompositionLocalProvider(LocalTextSelectionColors provides colors.textSelectionColors) {
         BasicTextField(
             state = state,
@@ -88,7 +114,7 @@ fun TextInput(
                 uiState = uiState,
                 enabled = enabled,
                 leadingIcon = leadingIcon,
-                trailingIcon = trailingIcon,
+                trailingIcon = newTrailingIcon,
                 prefix = prefix,
                 suffix = suffix
             ),

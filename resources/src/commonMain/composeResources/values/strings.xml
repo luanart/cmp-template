@@ -14,7 +14,7 @@
     <string name="err_field_not_valid_format">The %1$s format is invalid.</string>
     <!-- Auth module -->
     <string name="login">Login</string>
-    <string name="login_instruction">login to your Account</string>
+    <string name="login_instruction">Login to your Account</string>
     <string name="login_instruction_caption">Enter your username and password to login</string>
     <string name="login_asking_for_register">Don't have an account?</string>
     <string name="password">Password</string>
