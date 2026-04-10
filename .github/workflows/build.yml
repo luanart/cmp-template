@@ -44,17 +44,24 @@ jobs:
 
       - name: Restore google-services.json
         run: |
-          set -e
-
-          echo "Creating directory..."
           mkdir -p androidApp/src/debug
-      
-          echo "Decoding secret..."
-          printf "%s" "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > androidApp/src/debug/google-services.json
-      
-          echo "Checking file..."
-          ls -lah androidApp/src/debug
-          head -n 5 androidApp/src/debug/google-services.json
+          
+          # Check if the secret is empty (happens if environment/name is mismatched)
+          if [ -z "${{ secrets.GOOGLE_SERVICES_JSON }}" ]; then
+            echo "Error: GOOGLE_SERVICES_JSON is empty. Check your Environment Secrets."
+            exit 1
+          fi
+          
+          # Decode the secret
+          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > androidApp/src/debug/google-services.json
+          
+          # Final check: is the file valid JSON?
+          if ! jq '.' androidApp/src/debug/google-services.json > /dev/null 2>&1; then
+            echo "Error: Decoded file is not valid JSON. Check your Base64 encoding."
+            exit 1
+          fi
+          
+          echo "google-services.json successfully restored."
 
       - name: Build Android debug APK
         run: ./gradlew :androidApp:assembleDebug
@@ -80,8 +87,25 @@ jobs:
 
       - name: Restore GoogleService-Info.plist
         run: |
+          # 1. Create the directory (matches your project structure)
           mkdir -p iosApp/iosApp/FirebaseConfig
+          
+          # 2. Check if secret exists
+          if [ -z "${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}" ]; then
+            echo "Error: GOOGLE_SERVICE_INFO_PLIST is empty. Check Environment Secrets."
+            exit 1
+          fi
+          
+          # 3. Decode to the specific filename Xcode expects
           echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}" | base64 --decode > iosApp/iosApp/FirebaseConfig/Debug-GoogleService-Info.plist
+          
+          # 4. Verify file isn't empty
+          if [ ! -s iosApp/iosApp/FirebaseConfig/Debug-GoogleService-Info.plist ]; then
+            echo "Error: Plist file is empty after decoding."
+            exit 1
+          fi
+          
+          echo "GoogleService-Info.plist restored successfully."
 
       - name: Build iOS simulator app
         run: |
