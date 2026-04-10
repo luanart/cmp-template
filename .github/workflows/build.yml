@@ -43,8 +43,17 @@ jobs:
 
       - name: Restore google-services.json
         run: |
+          set -e
+
+          echo "Creating directory..."
           mkdir -p androidApp/src/debug
-          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > androidApp/src/debug/google-services.json
+      
+          echo "Decoding secret..."
+          printf "%s" "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > androidApp/src/debug/google-services.json
+      
+          echo "Checking file..."
+          ls -lah androidApp/src/debug
+          head -n 5 androidApp/src/debug/google-services.json
 
       - name: Build Android debug APK
         run: ./gradlew :androidApp:assembleDebug
