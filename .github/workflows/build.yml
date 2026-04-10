@@ -22,7 +22,7 @@ jobs:
         uses: ./.github/actions/gradle-setup
 
       - name: Run unit tests
-        run: ./gradlew jvmTest
+        run: ./gradlew test
 
       - name: Upload test reports
         uses: actions/upload-artifact@v4
@@ -65,9 +65,9 @@ jobs:
       - name: Build iOS simulator app
         run: |
           xcodebuild build \
-          -project JetcasterMigration/JetcasterMigration.xcodeproj \
+          -project iosApp/iosApp.xcodeproj \
           -configuration Debug \
-          -scheme JetcasterMigration \
+          -scheme Debug \
           -sdk iphonesimulator \
           -derivedDataPath ./build \
           -verbose
