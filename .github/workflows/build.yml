@@ -23,6 +23,9 @@ jobs:
 
       - name: Restore firebase config
         uses: ./.github/actions/restore-firebase
+        with:
+          google_services_json: ${{ secrets.GOOGLE_SERVICES_JSON }}
+          google_service_info_plist: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
 
       - name: Run unit tests
         run: ./gradlew test
@@ -47,6 +50,9 @@ jobs:
 
       - name: Restore firebase config
         uses: ./.github/actions/restore-firebase
+        with:
+          google_services_json: ${{ secrets.GOOGLE_SERVICES_JSON }}
+          google_service_info_plist: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
 
       - name: Build Android debug APK
         run: ./gradlew :androidApp:assembleDebug
@@ -72,6 +78,9 @@ jobs:
 
       - name: Restore firebase config
         uses: ./.github/actions/restore-firebase
+        with:
+          google_services_json: ${{ secrets.GOOGLE_SERVICES_JSON }}
+          google_service_info_plist: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
 
       - name: Build iOS simulator app
         run: |
