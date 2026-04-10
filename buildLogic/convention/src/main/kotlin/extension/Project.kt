@@ -42,14 +42,18 @@ internal fun Project.getDynamicNameSpace(): String {
         .let { "com$it" }
 }
 
-private fun Project.properties(name: String): String {
-    val properties = Properties().apply {
-        load(project.rootProject.file("keystore.properties").reader())
+private fun Project.loadKeystoreProperties(): Properties? {
+    val file = rootProject.file("keystore.properties")
+    if (!file.exists()) return null
+
+    return Properties().apply {
+        load(file.reader())
     }
-    return properties.getProperty(name, "")
 }
 
 internal fun Project.configureAndroid(extension: ApplicationExtension) {
+    val keystoreProps = loadKeystoreProperties()
+
     extension.apply {
         compileSdk = findProperty("android.targetSdk").toString().toInt()
 
@@ -64,11 +68,13 @@ internal fun Project.configureAndroid(extension: ApplicationExtension) {
             targetSdk = getProperty("android.targetSdk").toInt()
         }
         signingConfigs {
-            create("release") {
-                keyAlias = properties("key.alias")
-                keyPassword = properties("key.password")
-                storeFile = file(properties("store.file"))
-                storePassword = properties("store.password")
+            if (keystoreProps != null) {
+                create("release") {
+                    keyAlias = keystoreProps.getProperty("key.alias")
+                    keyPassword = keystoreProps.getProperty("key.password")
+                    storeFile = file(keystoreProps.getProperty("store.file"))
+                    storePassword = keystoreProps.getProperty("store.password")
+                }
             }
         }
         buildTypes {
@@ -76,7 +82,10 @@ internal fun Project.configureAndroid(extension: ApplicationExtension) {
                 applicationIdSuffix = ".debug"
             }
             getByName("release") {
-                signingConfig = signingConfigs.getByName("release")
+                if (keystoreProps != null) {
+                    signingConfig = signingConfigs.getByName("release")
+                }
+
                 isMinifyEnabled = true
                 isShrinkResources = true
                 proguardFiles(
