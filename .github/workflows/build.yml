@@ -41,14 +41,19 @@ jobs:
       - name: Gradle setup
         uses: ./.github/actions/gradle-setup
 
+      - name: Restore google-services.json
+        run: |
+          mkdir -p androidApp/src/debug
+          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > androidApp/src/debug/google-services.json
+
       - name: Build Android debug APK
-        run: ./gradlew :mobile:assembleDebug
+        run: ./gradlew :androidApp:assembleDebug
 
       - name: Upload Android debug APK
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
-          path: mobile/build/outputs/apk/debug/*.apk
+          path: androidApp/build/outputs/apk/debug/*.apk
 
 
   build-ios:
@@ -61,6 +66,11 @@ jobs:
 
       - name: Gradle setup
         uses: ./.github/actions/gradle-setup
+
+      - name: Restore GoogleService-Info.plist
+        run: |
+          mkdir -p iosApp/iosApp/FirebaseConfig
+          echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}" | base64 --decode > iosApp/iosApp/FirebaseConfig/Debug-GoogleService-Info.plist
 
       - name: Build iOS simulator app
         run: |
