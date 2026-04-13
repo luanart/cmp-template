@@ -1,4 +1,0 @@
-git_url("https://github.com/luanart/cmp-template")
-app_identifier("btk.digital.app.debug")
-username("hangoluancadis@gmail.com")
-type("development")
