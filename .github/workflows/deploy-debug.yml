@@ -1,0 +1,72 @@
+name: Debug build
+
+on:
+  push:
+    branches: [debug]
+  pull_request:
+    branches: [debug]
+  workflow_dispatch:
+
+env:
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4096M -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.caching=true"
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    environment: Dev
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Restore firebase config
+        uses: ./.github/actions/restore-firebase
+        with:
+          google_services_json: ${{ secrets.GOOGLE_SERVICE_JSON }}
+          google_service_info_plist: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
+
+      - name: Gradle setup
+        uses: ./.github/actions/gradle-setup
+
+      - name: Run unit tests
+        run: ./gradlew test
+
+      - name: Upload test reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: "**/build/reports/tests/"
+
+  build-android:
+    name: Build Android
+    runs-on: ubuntu-latest
+    needs: test
+    environment: Dev
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Restore firebase config
+        uses: ./.github/actions/restore-firebase
+        with:
+          google_services_json: ${{ secrets.GOOGLE_SERVICE_JSON }}
+
+      - name: Gradle setup
+        uses: ./.github/actions/gradle-setup
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Decode Firebase Credentials
+        run: echo "${{ secrets.FIREBASE_CREDENTIALS }}" > firebase-credentials.json
+
+      - name: Run Fastlane Android
+        run: bundle exec fastlane android deploy_debug
+        env:
+          FIREBASE_APP_ID_ANDROID: ${{ secrets.FIREBASE_APP_ID_ANDROID }}
+          FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}

@@ -1,0 +1,25 @@
+# Helper to get filtered notes
+def fetch_notes
+    # Gets last 5 commits, removes merges
+    sh("git log -n 5 --pretty=format:'- %s' | grep -v 'Merge pull request' | grep -v 'Merge branch'").strip
+end
+
+platform :android do
+    desc "Build Debug APK and upload to Firebase"
+    lane :distribute_debug do
+        # 1. Generate release notes
+        notes = fetch_notes
+
+        # 2. Build using Gradle
+        gradle(task: ":androidApp:assembleDebug")
+
+        # 3. Upload to Firebase
+        firebase_app_distribution(
+            app: ENV["FIREBASE_APP_ID_ANDROID"],
+            groups: "Internal",
+            apk_path: "androidApp/build/outputs/apk/debug/androidApp-debug.apk",
+            release_notes: notes,
+            service_credentials_file: ENV["FIREBASE_CREDENTIALS"],
+        )
+    end
+end
