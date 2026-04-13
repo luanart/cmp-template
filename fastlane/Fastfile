@@ -31,18 +31,7 @@ platform :ios do
         # 1. Generate release notes
         notes = fetch_notes
 
-        # 2. Authenticate with Apple
-        api_key = app_store_connect_api_key(
-            key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
-            issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
-            key_filepath: ENV["APP_STORE_CONNECT_KEY_FILE_PATH"],
-            duration: 1200,
-            in_house: false
-        )
-
-        pilot(api_key: api_key)
-
-        # 3. Build IPA
+        # 2. Build IPA
         build_app(
             scheme: "iosApp",
             project: "iosApp/iosApp.xcodeproj",
@@ -52,7 +41,7 @@ platform :ios do
             output_name: "iosApp.ipa"
         )
 
-        # 5. Upload to Firebase
+        # 3. Upload to Firebase
         firebase_app_distribution(
             app: ENV["FIREBASE_APP_ID_IOS"],
             groups: "Internal",
