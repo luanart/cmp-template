@@ -1,4 +1,4 @@
-name: Debug build
+name: Debug Build
 
 on:
   push:
@@ -57,7 +57,7 @@ jobs:
       - name: Build Android debug APK
         run: ./gradlew :androidApp:assembleDebug
 
-      - name: Upload artifact to Firebase App Distribution
+      - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
@@ -67,8 +67,8 @@ jobs:
           releaseNotes: "${{ github.event.head_commit.message }}"
 
   build-ios:
-    name: Build iOS (Debug → Firebase)
-    runs-on: macos-latest
+    name: Build iOS
+    runs-on: macos-14
     needs: test
     environment: DEBUG
     steps:
@@ -83,123 +83,70 @@ jobs:
         with:
           google_service_info_plist: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
 
-      # -----------------------------
-      # Install certificate only
-      # -----------------------------
-      - name: Install Apple certificate
-        env:
-          BUILD_CERTIFICATE_BASE64: ${{ secrets.IOS_BUILD_CERTIFICATE_BASE64 }}
-          P12_PASSWORD: ${{ secrets.IOS_P12_PASSWORD }}
-          KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
+      - name: Install Apple Certificate
+        uses: apple-actions/import-codesign-certs@v3
+        with:
+          p12-file-base64: ${{ secrets.IOS_BUILD_CERTIFICATE_BASE64 }}
+          p12-password: ${{ secrets.IOS_P12_PASSWORD }}
+          create-keychain: true
+          keychain-password: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
+
+      - name: Install Provisioning Profile
         run: |
-          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
-          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo -n "${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
 
-          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
-
-          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-
-          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-          security list-keychain -d user -s $KEYCHAIN_PATH
-
-      # -----------------------------
-      # Setup App Store Connect API
-      # -----------------------------
       - name: Setup App Store Connect API Key
         run: |
-          mkdir -p ~/.appstoreconnect/private_keys
-          echo -n "${{ secrets.APP_STORE_CONNECT_API_KEY }}" | base64 --decode \
-            > ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APP_STORE_CONNECT_KEY_ID }}.p8
+          echo -n "${{ secrets.APP_STORE_CONNECT_API_KEY }}" | base64 --decode > AuthKey.p8
 
-      # -----------------------------
-      # ExportOptions (automatic)
-      # -----------------------------
-      - name: Create export options plist
+      - name: Build iOS Archive
         run: |
-          cat <<EOF > $RUNNER_TEMP/ExportOptions.plist
+          xcodebuild archive \
+            -project iosApp/iosApp.xcodeproj \
+            -scheme iosApp \
+            -configuration Debug \
+            -archivePath $RUNNER_TEMP/iosApp.xcarchive \
+            -sdk iphoneos \
+            -allowProvisioningUpdates \
+            -authenticationKeyID ${{ secrets.APP_STORE_CONNECT_KEY_ID }} \
+            -authenticationKeyIssuerID ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }} \
+            -authenticationKeyPath $(pwd)/AuthKey.p8
+
+      - name: Export IPA
+        run: |
+          # Create ExportOptions.plist on the fly
+          cat <<EOF > ExportOptions.plist
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
           <dict>
             <key>method</key>
             <string>ad-hoc</string>
-
             <key>teamID</key>
             <string>${{ secrets.APPLE_TEAM_ID }}</string>
-
             <key>compileBitcode</key>
             <false/>
+            <key>signingStyle</key>
+            <string>automatic</string>
           </dict>
           </plist>
           EOF
-
-      # -----------------------------
-      # Resolve SPM (Firebase)
-      # -----------------------------
-      - name: Resolve Swift Package dependencies
-        run: |
-          defaults write com.apple.dt.Xcode IDESkipPackagePluginFingerprintValidatation -bool YES
-          xcodebuild -resolvePackageDependencies \
-            -project iosApp/iosApp.xcodeproj \
-            -scheme iosApp \
-            -clonedSourcePackagesDirPath ./SourcePackages
-
-      # -----------------------------
-      # Archive (automatic signing)
-      # -----------------------------
-      - name: Build iOS archive
-        run: |
-          xcodebuild archive \
-            -project iosApp/iosApp.xcodeproj \
-            -scheme iosApp \
-            -configuration Debug \
-            -sdk iphoneos \
-            -archivePath $RUNNER_TEMP/iosApp.xcarchive \
-            -destination generic/platform=iOS \
-            -clonedSourcePackagesDirPath ./SourcePackages \
-            COMPILER_INDEX_STORE_ENABLE=NO \
-            OTHER_CODE_SIGN_FLAGS="--keychain $RUNNER_TEMP/app-signing.keychain-db" \
-            -allowProvisioningUpdates \
-            -authenticationKeyPath ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APP_STORE_CONNECT_KEY_ID }}.p8 \
-            -authenticationKeyID ${{ secrets.APP_STORE_CONNECT_KEY_ID }} \
-            -authenticationKeyIssuerID ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }} \
-            -verbose
-
-      # -----------------------------
-      # Export IPA
-      # -----------------------------
-      - name: Export IPA
-        run: |
+          
           xcodebuild -exportArchive \
             -archivePath $RUNNER_TEMP/iosApp.xcarchive \
-            -exportOptionsPlist $RUNNER_TEMP/ExportOptions.plist \
+            -exportOptionsPlist ExportOptions.plist \
             -exportPath $RUNNER_TEMP/export \
             -allowProvisioningUpdates \
-            -authenticationKeyPath ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APP_STORE_CONNECT_KEY_ID }}.p8 \
             -authenticationKeyID ${{ secrets.APP_STORE_CONNECT_KEY_ID }} \
             -authenticationKeyIssuerID ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }} \
-            -verbose
+            -authenticationKeyPath $(pwd)/AuthKey.p8
 
-      # -----------------------------
-      # Upload to Firebase
-      # -----------------------------
-      - name: Upload IPA to Firebase App Distribution
+      - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_IOS_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIALS }}
           groups: Internal
           file: ${{ runner.temp }}/export/iosApp.ipa
-          releaseNotes: "${{ github.event.head_commit.message }}"
-
-      # -----------------------------
-      # Cleanup
-      # -----------------------------
-      - name: Clean up keychain and API key
-        if: always()
-        run: |
-          security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
-          rm -f ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APP_STORE_CONNECT_KEY_ID }}.p8
+          releaseNotes: "Build from branch: ${{ github.ref_name }}"
