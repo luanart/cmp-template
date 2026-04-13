@@ -94,17 +94,10 @@ jobs:
           ruby-version: '3.2'
           bundler-cache: true
 
-      - name: Setup App Store Connect API Key
-        run: |
-          echo "${{ secrets.ASC_KEY_CONTENT_BASE64 }}" | base64 --decode > AuthKey_${{ secrets.ASC_KEY_ID }}.p8
-
-          - name: Run Fastlane iOS
-            run: bundle exec fastlane ios distribute_debug
-            env:
-              FIREBASE_APP_ID_IOS: ${{ secrets.FIREBASE_APP_ID_IOS }}
-              APP_STORE_CONNECT_KEY_ID: ${{ secrets.ASC_KEY_ID }}
-              APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
-              APP_STORE_CONNECT_KEY_FILE_PATH: AuthKey_${{ secrets.ASC_KEY_ID }}.p8
-
-      - name: Clean up API key
-        run: rm -f AuthKey_${{ secrets.ASC_KEY_ID }}.p8
+      - name: Run Fastlane iOS
+        run: bundle exec fastlane ios distribute_debug
+        env:
+          FIREBASE_APP_ID_IOS: ${{ secrets.FIREBASE_APP_ID_IOS }}
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.ASC_KEY_CONTENT_BASE64 }}
