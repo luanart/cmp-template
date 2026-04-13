@@ -57,8 +57,10 @@ jobs:
       - name: Build Android debug APK
         run: ./gradlew :androidApp:assembleDebug
 
-      - name: Upload Android debug APK
-        uses: actions/upload-artifact@v4
+      - name: upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          name: android-apk
-          path: androidApp/build/outputs/apk/debug/*.apk
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIALS }}
+          groups: Internal
+          file: androidApp/build/outputs/apk/debug/androidApp-debug.apk
