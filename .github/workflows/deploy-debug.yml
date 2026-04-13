@@ -63,7 +63,7 @@ jobs:
           bundler-cache: true
 
       - name: Decode Firebase Credentials
-        run: echo "${{ secrets.FIREBASE_CREDENTIALS }}" > firebase-credentials.json
+        run: echo "${{ secrets.FIREBASE_CREDENTIALS }}" | base64 --decode > "firebase-credentials.json"
 
       - name: Run Fastlane Android
         run: bundle exec fastlane android distribute_debug
