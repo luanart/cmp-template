@@ -64,3 +64,4 @@ jobs:
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIALS }}
           groups: Internal
           file: androidApp/build/outputs/apk/debug/androidApp-debug.apk
+          releaseNotes: "${{ github.event.head_commit.message }}"
