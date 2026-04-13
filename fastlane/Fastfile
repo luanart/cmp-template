@@ -31,17 +31,22 @@ platform :ios do
         # 1. Generate release notes
         notes = fetch_notes
 
-        # 2. Build IPA
+        # 2. Code signing
+        match(type: "development", readonly: true)
+
+        # 3. Build IPA
         build_app(
             scheme: "iosApp",
             project: "iosApp/iosApp.xcodeproj",
             configuration: "Debug",
             export_method: "development",
             output_directory: "build/ios",
-            output_name: "iosApp.ipa"
+            output_name: "iosApp.ipa",
+            derived_data_path: "build/derived_data",
+            skip_profile_detection: true
         )
 
-        # 3. Upload to Firebase
+        # 4. Upload to Firebase
         firebase_app_distribution(
             app: ENV["FIREBASE_APP_ID_IOS"],
             groups: "Internal",
