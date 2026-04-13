@@ -28,32 +28,65 @@ end
 platform :ios do
     desc "Build Debug IPA and upload to Firebase"
     lane :distribute_debug do
-        # 1. Generate release notes
         notes = fetch_notes
+        keychain_name = "build.keychain"
+        keychain_password = "temp_password"
 
-        # 2. Config api key
-        api_key = app_store_connect_api_key(
-            key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
-            issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
-            key_content: ENV["APP_STORE_CONNECT_KEY_CONTENT"],
-            is_key_content_base64: true,
-            duration: 1200,
-            in_house: false
-        )
+        begin
+            setup_ci
 
-        # 3. Pass the key to Match
-        match(type: "adhoc", api_key: api_key)
+            api_key = app_store_connect_api_key(
+                key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
+                issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+                key_content: ENV["APP_STORE_CONNECT_KEY_CONTENT"],
+                is_key_content_base64: true
+            )
 
-        # 4. Build IPA
-        build_app(scheme: "iosApp", export_method: "ad-hoc")
+            create_keychain(
+                name: keychain_name,
+                password: keychain_password,
+                default_keychain: true,
+                unlock: true,
+                timeout: 3600,
+                lock_when_sleeps: false
+            )
 
-        # 5. Upload to Firebase
-        firebase_app_distribution(
-            app: ENV["FIREBASE_APP_ID_IOS"],
-            groups: "Internal",
-            ipa_path: "build/ios/iosApp.ipa",
-            release_notes: notes,
-            service_credentials_file: "firebase-credentials.json"
-        )
+            import_certificate(
+                certificate_path: ENV["IOS_CERTIFICATE_PATH"],
+                certificate_password: ENV["IOS_CERTIFICATE_PASSWORD"],
+                keychain_name: keychain_name,
+                keychain_password: keychain_password
+            )
+
+            install_provisioning_profile(
+                path: ENV["IOS_PROVISIONING_PROFILE_PATH"]
+            )
+
+            update_code_signing_settings(
+                use_automatic_signing: false,
+                path: "iosApp/iosApp.xcodeproj",
+                code_sign_identity: "iPhone Distribution",
+                profile_name: ENV["IOS_PROVISIONING_PROFILE_NAME"]
+            )
+
+            build_app(
+                scheme: "iosApp",
+                configuration: "Debug",
+                export_method: "ad-hoc",
+                output_directory: "build/ios"
+            )
+
+            firebase_app_distribution(
+                app: ENV["FIREBASE_APP_ID_IOS"],
+                groups: "Internal",
+                ipa_path: "build/ios/iosApp.ipa",
+                release_notes: notes,
+                service_credentials_file: "firebase-credentials.json"
+            )
+
+        ensure
+            # Always runs even if lane fails
+            delete_keychain(name: keychain_name)
+        end
     end
 end

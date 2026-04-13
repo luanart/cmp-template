@@ -94,10 +94,16 @@ jobs:
           ruby-version: '3.2'
           bundler-cache: true
 
+      - name: Decode certificate and provisioning profile
+        run: |
+          echo "${{ secrets.IOS_CERTIFICATE_BASE64 }}" | base64 --decode > certificate.p12
+          echo "${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}" | base64 --decode > profile.mobileprovision
+
       - name: Run Fastlane iOS
         run: bundle exec fastlane ios distribute_debug
         env:
           FIREBASE_APP_ID_IOS: ${{ secrets.FIREBASE_APP_ID_IOS }}
-          APP_STORE_CONNECT_KEY_ID: ${{ secrets.ASC_KEY_ID }}
-          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
-          APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.ASC_KEY_CONTENT_BASE64 }}
+          IOS_CERTIFICATE_PATH: certificate.p12
+          IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+          IOS_PROVISIONING_PROFILE_PATH: profile.mobileprovision
+          IOS_PROVISIONING_PROFILE_NAME: ${{ secrets.IOS_PROVISIONING_PROFILE_NAME }}
