@@ -2,6 +2,9 @@ name: 'Restore Firebase Config'
 description: 'Restores google-services.json and GoogleService-Info.plist from secrets'
 
 inputs:
+  firebase_credentials:
+    description: "The FIREBASE_CREDENTIALS secret (base64 encoded)"
+    required: false
   google_services_json:
     description: "The GOOGLE_SERVICES_JSON secret (base64 encoded)"
     required: false
@@ -12,10 +15,26 @@ inputs:
   google_service_info_plist:
     description: "The GOOGLE_SERVICE_INFO_PLIST secret (base64 encoded)"
     required: false
+  google_service_info_plist_name:
+    description: "File name for google service info plist"
+    default: Debug-GoogleService-Info.plist
+    required: false
 
 runs:
   using: "composite"
   steps:
+    - name: Restore firebase-credentials.json
+      if: inputs.firebase_credentials != ''
+      shell: bash
+      run: |
+        if [ -z "${{ inputs.firebase_credentials }}" ]; then
+          echo "Error: firebase_credentials input is empty."
+          exit 1
+        fi
+
+        echo "${{ inputs.firebase_credentials }}" | base64 --decode > "firebase-credentials.json"
+        echo "firebase-credentials.json restored to successfully!"
+
     - name: Restore google-services.json
       if: inputs.google_services_json != ''
       shell: bash
@@ -35,6 +54,7 @@ runs:
       if: inputs.google_service_info_plist != ''
       shell: bash
       run: |
+        FILE_NAME="${{ inputs.google_service_info_plist_name }}"
         mkdir -p iosApp/iosApp/FirebaseConfig
         
         if [ -z "${{ inputs.google_service_info_plist }}" ]; then
@@ -42,5 +62,5 @@ runs:
           exit 1
         fi
         
-        echo "${{ inputs.google_service_info_plist }}" | base64 --decode > iosApp/iosApp/FirebaseConfig/Debug-GoogleService-Info.plist
+        echo "${{ inputs.google_service_info_plist }}" | base64 --decode > "iosApp/iosApp/FirebaseConfig/$FILE_NAME"
         echo "GoogleService-Info.plist restored to iosApp/iosApp/FirebaseConfig"
