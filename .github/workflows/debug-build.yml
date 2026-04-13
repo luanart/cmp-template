@@ -67,7 +67,7 @@ jobs:
           releaseNotes: "${{ github.event.head_commit.message }}"
 
   build-ios:
-    name: Build iOS IPA
+    name: Build iOS
     runs-on: macos-latest
     needs: test
     environment: DEBUG
@@ -152,6 +152,8 @@ jobs:
             DEVELOPMENT_TEAM=${{ secrets.APPLE_TEAM_ID }} \
             OTHER_CODE_SIGN_FLAGS="--keychain $RUNNER_TEMP/app-signing.keychain-db" \
             COMPILER_INDEX_STORE_ENABLE=NO \
+            CODE_SIGNING_ALLOWED_FOR_APPS=YES \
+            CODE_SIGNING_REQUIRED=NO \
             -verbose
 
       - name: Export IPA
