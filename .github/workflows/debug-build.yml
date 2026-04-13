@@ -19,19 +19,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Restore firebase config
+        uses: ./.github/actions/restore-firebase
+        with:
+          google_services_json: ${{ secrets.GOOGLE_SERVICES_JSON }}
+          google_service_info_plist: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
+
       - name: Gradle setup
         uses: ./.github/actions/gradle-setup
-
-      - name: Restore google-services.json
-        shell: bash
-        run: |
-          mkdir -p androidApp/src/debug
-          if [ -z "${{ secrets.GOOGLE_SERVICES_JSON }}" ]; then
-            echo "Error: google_services_json input is empty."
-            exit 1
-          fi
-          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > androidApp/src/debug/google-services.json
-          echo "google-services.json successfully restored."
 
       - name: Run unit tests
         run: ./gradlew test
@@ -50,6 +45,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Restore firebase config
+        uses: ./.github/actions/restore-firebase
+        with:
+          google_services_json: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
       - name: Gradle setup
         uses: ./.github/actions/gradle-setup
