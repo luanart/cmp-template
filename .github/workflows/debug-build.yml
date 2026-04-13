@@ -67,10 +67,11 @@ jobs:
           releaseNotes: "${{ github.event.head_commit.message }}"
 
   build-ios:
-    name: Build iOS
+    name: Build iOS (Debug → Firebase)
     runs-on: macos-latest
     needs: test
     environment: DEBUG
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -83,6 +84,9 @@ jobs:
         with:
           google_service_info_plist: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
 
+      # -----------------------------
+      # Install cert + provisioning
+      # -----------------------------
       - name: Install Apple certificate and provisioning profile
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.IOS_BUILD_CERTIFICATE_BASE64 }}
@@ -103,10 +107,13 @@ jobs:
 
           security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-          
+
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
+      # -----------------------------
+      # ExportOptions (DEBUG FIX)
+      # -----------------------------
       - name: Create export options plist
         run: |
           cat <<EOF > $RUNNER_TEMP/ExportOptions.plist
@@ -115,22 +122,29 @@ jobs:
           <plist version="1.0">
           <dict>
             <key>method</key>
-            <string>ad-hoc</string>
+            <string>development</string>
+
             <key>signingStyle</key>
             <string>manual</string>
+
             <key>teamID</key>
             <string>${{ secrets.APPLE_TEAM_ID }}</string>
+
             <key>provisioningProfiles</key>
             <dict>
               <key>btk.digital.app.debug</key>
               <string>${{ secrets.IOS_PROVISION_PROFILE_UUID }}</string>
             </dict>
+
             <key>compileBitcode</key>
             <false/>
           </dict>
           </plist>
           EOF
 
+      # -----------------------------
+      # Resolve SPM (Firebase)
+      # -----------------------------
       - name: Resolve Swift Package dependencies
         run: |
           defaults write com.apple.dt.Xcode IDESkipPackagePluginFingerprintValidatation -bool YES
@@ -139,6 +153,9 @@ jobs:
             -scheme iosApp \
             -clonedSourcePackagesDirPath ./SourcePackages
 
+      # -----------------------------
+      # Archive (NO signing → FIX SPM)
+      # -----------------------------
       - name: Build iOS archive
         run: |
           xcodebuild archive \
@@ -149,11 +166,17 @@ jobs:
             -archivePath $RUNNER_TEMP/iosApp.xcarchive \
             -destination generic/platform=iOS \
             -clonedSourcePackagesDirPath ./SourcePackages \
-            CODE_SIGNING_ALLOWED_FOR_APPS=YES \
+            CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}" \
+            COMPILER_INDEX_STORE_ENABLE=NO \
             OTHER_CODE_SIGN_FLAGS="--keychain $RUNNER_TEMP/app-signing.keychain-db" \
             -verbose
 
+      # -----------------------------
+      # Export IPA (SIGN HERE)
+      # -----------------------------
       - name: Export IPA
         run: |
           xcodebuild -exportArchive \
@@ -163,6 +186,9 @@ jobs:
             -allowProvisioningUpdates \
             -verbose
 
+      # -----------------------------
+      # Upload to Firebase
+      # -----------------------------
       - name: Upload IPA to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
@@ -172,6 +198,9 @@ jobs:
           file: ${{ runner.temp }}/export/iosApp.ipa
           releaseNotes: "${{ github.event.head_commit.message }}"
 
+      # -----------------------------
+      # Cleanup
+      # -----------------------------
       - name: Clean up keychain and provisioning profile
         if: always()
         run: |
