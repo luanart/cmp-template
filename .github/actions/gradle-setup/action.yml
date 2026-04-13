@@ -1,5 +1,6 @@
 name: gradle-setup
 description: Setup the Java and Gradle
+
 runs:
   using: "composite"
   steps:
