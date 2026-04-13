@@ -31,16 +31,22 @@ platform :ios do
         # 1. Generate release notes
         notes = fetch_notes
 
-        # 2. Sync certificates and profiles (ensures Ad Hoc is ready)
-        match(type: "adhoc", force: true)
-
-        # 3. Build the app using those credentials
-        build_app(
-            scheme: "iosApp",
-            export_method: "ad-hoc" # CRITICAL: This must match your Match type
+        # 2. Config api key
+        api_key = app_store_connect_api_key(
+            key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
+            issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+            key_filepath: ENV["APP_STORE_CONNECT_KEY_FILE_PATH"],
+            duration: 1200,
+            in_house: false
         )
 
-        # 4. Upload to Firebase
+        # 3. Pass the key to Match
+        match(type: "adhoc", api_key: api_key)
+
+        # 4. Build IPA
+        build_app(scheme: "iosApp", export_method: "ad-hoc")
+
+        # 5. Upload to Firebase
         firebase_app_distribution(
             app: ENV["FIREBASE_APP_ID_IOS"],
             groups: "Internal",
