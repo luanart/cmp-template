@@ -68,7 +68,7 @@ jobs:
 
   build-ios:
     name: Build iOS
-    runs-on: macos-14
+    runs-on: macos-latest
     needs: test
     environment: DEBUG
     steps:
