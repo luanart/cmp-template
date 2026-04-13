@@ -90,28 +90,31 @@ jobs:
           BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.IOS_PROVISION_PROFILE_BASE64 }}
           KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
         run: |
-          # Create temp paths
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
           PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
-          # Decode secrets to files
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
           echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
 
-          # Create and unlock a temporary keychain
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
 
-          # Import certificate to keychain
           security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-          security list-keychain -d user -s $KEYCHAIN_PATH
-
-          # Install provisioning profile
+          
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+
+      - name: Extract Resolved Bundle ID
+        id: extract_id
+        run: |
+          BUNDLE_ID=$(xcodebuild -showBuildSettings \
+            -project iosApp/iosApp.xcodeproj \
+            -scheme iosApp \
+            -configuration Debug | grep PRODUCT_BUNDLE_IDENTIFIER | awk '{print $3}')
+          echo "BUNDLE_ID=$BUNDLE_ID" >> $GITHUB_OUTPUT
 
       - name: Create export options plist
         run: |
@@ -122,6 +125,15 @@ jobs:
           <dict>
             <key>method</key>
             <string>ad-hoc</string>
+            <key>signingStyle</key>
+            <string>manual</string>
+            <key>teamID</key>
+            <string>${{ secrets.APPLE_TEAM_ID }}</string>
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>${{ steps.extract_id.outputs.BUNDLE_ID }}</key>
+              <string>${{ secrets.IOS_PROVISION_PROFILE_UUID }}</string>
+            </dict>
             <key>compileBitcode</key>
             <false/>
           </dict>
@@ -146,14 +158,9 @@ jobs:
             -archivePath $RUNNER_TEMP/iosApp.xcarchive \
             -destination generic/platform=iOS \
             -clonedSourcePackagesDirPath ./SourcePackages \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="iPhone Distribution" \
-            PROVISIONING_PROFILE_SPECIFIER="${{ secrets.IOS_PROVISION_PROFILE_UUID }}" \
-            DEVELOPMENT_TEAM=${{ secrets.APPLE_TEAM_ID }} \
-            OTHER_CODE_SIGN_FLAGS="--keychain $RUNNER_TEMP/app-signing.keychain-db" \
-            COMPILER_INDEX_STORE_ENABLE=NO \
             CODE_SIGNING_ALLOWED_FOR_APPS=YES \
             CODE_SIGNING_REQUIRED=NO \
+            OTHER_CODE_SIGN_FLAGS="--keychain $RUNNER_TEMP/app-signing.keychain-db" \
             -verbose
 
       - name: Export IPA
