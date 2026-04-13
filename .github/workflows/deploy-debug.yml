@@ -69,4 +69,3 @@ jobs:
         run: bundle exec fastlane android deploy_debug
         env:
           FIREBASE_APP_ID_ANDROID: ${{ secrets.FIREBASE_APP_ID_ANDROID }}
-          FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}

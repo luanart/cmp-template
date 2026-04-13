@@ -19,7 +19,7 @@ platform :android do
             groups: "Internal",
             apk_path: "androidApp/build/outputs/apk/debug/androidApp-debug.apk",
             release_notes: notes,
-            service_credentials_file: ENV["FIREBASE_CREDENTIALS"],
+            service_credentials_file: "firebase-credentials.json",
         )
     end
 end
