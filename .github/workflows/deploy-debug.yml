@@ -104,7 +104,7 @@ jobs:
           FIREBASE_APP_ID_IOS: ${{ secrets.FIREBASE_APP_ID_IOS }}
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
-          APP_STORE_CONNECT_KEY_CONTENT: AuthKey_${{ secrets.ASC_KEY_ID }}.p8
+          APP_STORE_CONNECT_KEY_FILE_PATH: AuthKey_${{ secrets.ASC_KEY_ID }}.p8
 
       - name: Clean up API key
         run: rm -f AuthKey_${{ secrets.ASC_KEY_ID }}.p8
