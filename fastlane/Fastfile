@@ -27,7 +27,7 @@ end
 
 platform :ios do
     desc "Build Debug IPA and upload to Firebase"
-    lane :distribute_debug do
+        lane :distribute_debug do
         notes = fetch_notes
         keychain_name = "build.keychain"
         keychain_password = "temp_password"
@@ -65,7 +65,10 @@ platform :ios do
                 scheme: "iosApp",
                 configuration: "Debug",
                 export_method: "ad-hoc",
-                output_directory: "build/ios"
+                output_directory: "build/ios",
+                build_path: "build/ios",
+                derived_data_path: "build/derived_data",
+                xcargs: "-allowProvisioningUpdates"
             )
 
             firebase_app_distribution(
@@ -77,8 +80,7 @@ platform :ios do
             )
 
         ensure
-            # Always runs even if lane fails
-            delete_keychain(name: keychain_name)
+            delete_keychain(name: keychain_name) if File.exist?(File.expand_path("~/Library/Keychains/#{keychain_name}-db"))
         end
     end
 end

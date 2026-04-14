@@ -99,6 +99,13 @@ jobs:
           echo "${{ secrets.IOS_CERTIFICATE_BASE64 }}" | base64 --decode > certificate.p12
           echo "${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}" | base64 --decode > profile.mobileprovision
 
+      - name: Resolve Swift Package dependencies
+        run: |
+          xcodebuild -version
+          xcodebuild -resolvePackageDependencies \
+          -project iosApp/iosApp.xcodeproj \
+          -scheme iosApp
+
       - name: Run Fastlane iOS
         run: bundle exec fastlane ios distribute_debug
         env:
@@ -107,3 +114,5 @@ jobs:
           IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
           IOS_PROVISIONING_PROFILE_PATH: profile.mobileprovision
           IOS_PROVISIONING_PROFILE_NAME: ${{ secrets.IOS_PROVISIONING_PROFILE_NAME }}
+          FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: 120
+          FASTLANE_XCODEBUILD_SETTINGS_RETRIES: 5
