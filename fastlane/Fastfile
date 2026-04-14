@@ -73,6 +73,7 @@ platform :ios do
                     }
                 },
                 output_directory: "build/ios",
+                output_name: "iosApp.ipa",
                 build_path: "build/ios",
                 derived_data_path: "build/derived_data",
             )
