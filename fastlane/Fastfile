@@ -7,13 +7,15 @@ end
 platform :android do
     desc "Build Debug APK and upload to Firebase"
     lane :distribute_debug do
-        # 1. Generate release notes
         notes = fetch_notes
 
-        # 2. Build APK
-        gradle(task: ":androidApp:assembleDebug")
+        gradle(
+            task: ":androidApp:assembleDebug",
+            properties: {
+                "version.code" => Time.now.to_i # Injects a unique timestamp as the version code
+            }
+        )
 
-        # 3. Upload to Firebase
         firebase_app_distribution(
             app: ENV["FIREBASE_APP_ID_ANDROID"],
             groups: "Internal",
@@ -61,6 +63,11 @@ platform :ios do
                 profile_name: ENV["IOS_PROVISIONING_PROFILE_NAME"]
             )
 
+            increment_build_number(
+                build_number: Time.now.to_i, # Temporary unique number
+                xcodeproj: "iosApp/iosApp.xcodeproj"
+            )
+
             build_app(
                 project: "iosApp/iosApp.xcodeproj",
                 scheme: "iosApp",
@@ -85,7 +92,6 @@ platform :ios do
                 release_notes: notes,
                 service_credentials_file: "firebase-credentials.json"
             )
-
         ensure
             delete_keychain(name: keychain_name)
         end
