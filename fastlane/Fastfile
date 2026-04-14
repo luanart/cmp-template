@@ -39,7 +39,8 @@ platform :ios do
                 default_keychain: true,
                 unlock: true,
                 timeout: 3600,
-                lock_when_sleeps: false
+                lock_when_sleeps: false,
+                add_to_search_list: true
             )
 
             import_certificate(
