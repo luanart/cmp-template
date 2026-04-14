@@ -3,8 +3,26 @@ name: Deploy Debug App
 on:
   push:
     branches: [debug]
+    paths-ignore:
+      - '**.md'
+      - '**.txt'
+      - '**/.gitignore'
+      - '.editorconfig'
+      - '.github/**'
+      - 'Gemfile.lock'
+      - 'fastlane/metadata/**'
+      - 'fastlane/screenshots/**'
   pull_request:
     branches: [debug]
+    paths-ignore:
+      - '**.md'
+      - '**.txt'
+      - '**/.gitignore'
+      - '.editorconfig'
+      - '.github/**'
+      - 'Gemfile.lock'
+      - 'fastlane/metadata/**'
+      - 'fastlane/screenshots/**'
   workflow_dispatch:
 
 env:
