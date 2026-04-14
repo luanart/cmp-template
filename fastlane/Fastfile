@@ -66,10 +66,15 @@ platform :ios do
                 scheme: "iosApp",
                 configuration: "Debug",
                 export_method: "ad-hoc",
+                export_options: {
+                signingStyle: "manual",
+                    provisioningProfiles: {
+                        "btk.digital.app.debug" => ENV["IOS_PROVISIONING_PROFILE_NAME"]
+                    }
+                },
                 output_directory: "build/ios",
                 build_path: "build/ios",
                 derived_data_path: "build/derived_data",
-                xcargs: "-allowProvisioningUpdates"
             )
 
             firebase_app_distribution(
@@ -81,7 +86,7 @@ platform :ios do
             )
 
         ensure
-            delete_keychain(name: keychain_name) if File.exist?(File.expand_path("~/Library/Keychains/#{keychain_name}-db"))
+            delete_keychain(name: keychain_name)
         end
     end
 end
