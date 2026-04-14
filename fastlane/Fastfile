@@ -67,9 +67,9 @@ platform :ios do
                 configuration: "Debug",
                 export_method: "ad-hoc",
                 export_options: {
-                signingStyle: "manual",
+                    signingStyle: "manual",
                     provisioningProfiles: {
-                        "btk.digital.app.debug" => ENV["IOS_PROVISIONING_PROFILE_NAME"]
+                        ENV["IOS_BUNDLE_ID"] => ENV["IOS_PROVISIONING_PROFILE_NAME"]
                     }
                 },
                 output_directory: "build/ios",

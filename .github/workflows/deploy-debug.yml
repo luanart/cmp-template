@@ -99,6 +99,11 @@ jobs:
           echo "${{ secrets.IOS_CERTIFICATE_BASE64 }}" | base64 --decode > certificate.p12
           echo "${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}" | base64 --decode > profile.mobileprovision
 
+      - name: Load bundle id from gradle.properties
+        run: |
+          APP_ID=$(awk -F= '/^app.id=/{print $2}' gradle.properties | tr -d '\r')
+          echo "IOS_BUNDLE_ID=${APP_ID}.debug" >> $GITHUB_ENV
+
       - name: Run Fastlane iOS
         run: bundle exec fastlane ios distribute_debug
         env:
