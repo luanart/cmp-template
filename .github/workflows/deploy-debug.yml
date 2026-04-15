@@ -8,8 +8,6 @@ on:
       - '**.txt'
       - '**/.gitignore'
       - '.editorconfig'
-      - '.github/**'
-      - 'Gemfile.lock'
       - 'fastlane/metadata/**'
       - 'fastlane/screenshots/**'
   pull_request:
@@ -19,8 +17,6 @@ on:
       - '**.txt'
       - '**/.gitignore'
       - '.editorconfig'
-      - '.github/**'
-      - 'Gemfile.lock'
       - 'fastlane/metadata/**'
       - 'fastlane/screenshots/**'
   workflow_dispatch:
@@ -51,6 +47,7 @@ jobs:
 
       - name: Upload test reports
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: test-reports
           path: "**/build/reports/tests/"
@@ -115,9 +112,10 @@ jobs:
           bundler-cache: true
 
       - name: Decode certificate and provisioning profile
-        run: |
-          echo "${{ secrets.IOS_CERTIFICATE_BASE64 }}" | base64 --decode > certificate.p12
-          echo "${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}" | base64 --decode > profile.mobileprovision
+        uses: ./.github/actions/restore-ios-certificate
+        with:
+          certificate: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+          provisioning: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
 
       - name: Load bundle id from gradle.properties
         run: |

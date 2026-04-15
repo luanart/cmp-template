@@ -1,0 +1,25 @@
+name: 'Restore iOS Cert Signing'
+description: 'Restores iOS certificates & provision from secrets'
+
+inputs:
+  certificate:
+    description: "The IOS_CERTIFICATE_BASE64 secret"
+    required: true
+  provisioning:
+    description: "The IOS_PROVISIONING_PROFILE secret"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Restore iOS certificate.12
+      if: inputs.certificate != ''
+      shell: bash
+      run: |
+        echo "${{ inputs.certificate }}" | base64 --decode > certificate.p12
+
+    - name: Restore iOS profile.mobileprovision
+      if: inputs.provisioning != ''
+      shell: bash
+      run: |
+        echo "${{ inputs.provisioning }}" | base64 --decode > profile.mobileprovision

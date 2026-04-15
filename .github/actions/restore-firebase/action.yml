@@ -27,11 +27,6 @@ runs:
       if: inputs.firebase_credentials != ''
       shell: bash
       run: |
-        if [ -z "${{ inputs.firebase_credentials }}" ]; then
-          echo "Error: firebase_credentials input is empty."
-          exit 1
-        fi
-
         echo "${{ inputs.firebase_credentials }}" | base64 --decode > "firebase-credentials.json"
         echo "firebase-credentials.json restored to successfully!"
 
@@ -41,12 +36,6 @@ runs:
       run: |
         TARGET_DIR="${{ inputs.google_services_json_location }}"
         mkdir -p "$TARGET_DIR"
-        
-        if [ -z "${{ inputs.google_services_json }}" ]; then
-          echo "Error: google_services_json input is empty."
-          exit 1
-        fi
-        
         echo "${{ inputs.google_services_json }}" | base64 --decode > "$TARGET_DIR/google-services.json"
         echo "google-services.json successfully restored to $TARGET_DIR."
 
@@ -56,11 +45,5 @@ runs:
       run: |
         FILE_NAME="${{ inputs.google_service_info_plist_name }}"
         mkdir -p iosApp/iosApp/FirebaseConfig
-        
-        if [ -z "${{ inputs.google_service_info_plist }}" ]; then
-          echo "Error: google_service_info_plist input is empty."
-          exit 1
-        fi
-        
         echo "${{ inputs.google_service_info_plist }}" | base64 --decode > "iosApp/iosApp/FirebaseConfig/$FILE_NAME"
         echo "GoogleService-Info.plist restored to iosApp/iosApp/FirebaseConfig"
