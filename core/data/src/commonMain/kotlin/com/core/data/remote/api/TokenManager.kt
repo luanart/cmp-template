@@ -1,5 +1,6 @@
 package com.core.data.remote.api
 
+import com.core.data.BuildKonfig
 import com.core.data.local.SecureStorage
 import com.core.data.local.SecureStorage.Companion.clearToken
 import com.core.data.local.SecureStorage.Companion.getAccessToken
@@ -12,6 +13,7 @@ import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -33,6 +35,9 @@ class TokenManager(
                 json(Json {
                     ignoreUnknownKeys = true
                 })
+            }
+            defaultRequest {
+                url(BuildKonfig.baseUrl)
             }
         }
     }

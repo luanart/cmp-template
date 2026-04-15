@@ -3,17 +3,17 @@ description: 'Restores google-services.json and GoogleService-Info.plist from se
 
 inputs:
   firebase_credentials:
-    description: "The FIREBASE_CREDENTIALS secret (base64 encoded)"
+    description: "The FIREBASE_CREDENTIALS secret"
     required: false
   google_services_json:
-    description: "The GOOGLE_SERVICES_JSON secret (base64 encoded)"
+    description: "The GOOGLE_SERVICES_JSON secret"
     required: false
   google_services_json_location:
     description: "Directory where google-services.json will be restored"
     default: androidApp/src/debug
     required: false
   google_service_info_plist:
-    description: "The GOOGLE_SERVICE_INFO_PLIST secret (base64 encoded)"
+    description: "The GOOGLE_SERVICE_INFO_PLIST secret"
     required: false
   google_service_info_plist_name:
     description: "File name for google service info plist"

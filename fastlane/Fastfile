@@ -1,7 +1,7 @@
 # Helper to get filtered notes
 def fetch_notes
     # Gets last commit, removes merges
-    sh("git log -1 --pretty=format:'- %s' | grep -v 'Merge pull request' | grep -v 'Merge branch'").strip
+    sh("git log --no-merges -1 --pretty=format:'- %s'").strip
 end
 
 platform :android do
