@@ -4,8 +4,8 @@ import com.core.data.local.LocalStorage
 import com.core.data.local.SecureStorage
 import com.core.data.local.SecureStorage.Companion.storeAccessToken
 import com.core.data.local.SecureStorage.Companion.storeRefreshToken
-import com.core.data.remote.api.ApiConfig
 import com.core.data.remote.api.ApiService
+import com.core.data.remote.api.ApiUrl
 import com.core.data.remote.dto.LoginRequestDto
 import com.core.data.remote.dto.LoginResponseDto
 import com.core.data.remote.dto.UserDto
@@ -20,7 +20,7 @@ internal class AuthRepositoryImpl(
 ) : AuthRepository {
     override suspend fun login(data: LoginRequestDto) : Result<Unit> {
         return runCatching {
-            val response = apiService.post<LoginResponseDto>(url = ApiConfig.Url.LOGIN, data = data)
+            val response = apiService.post<LoginResponseDto>(url = ApiUrl.LOGIN, data = data)
             localStorage.storeUserId(response.userId)
             secureStorage.storeAccessToken(response.accessToken)
             secureStorage.storeRefreshToken(response.refreshToken)
@@ -28,6 +28,6 @@ internal class AuthRepositoryImpl(
     }
 
     override suspend fun fetchCurrentProfile(): Result<UserDto> {
-        return runCatching { apiService.get<UserDto>(url = ApiConfig.Url.CURRENT) }
+        return runCatching { apiService.get<UserDto>(url = ApiUrl.CURRENT) }
     }
 }

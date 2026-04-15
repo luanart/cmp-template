@@ -65,7 +65,7 @@ class TokenManager(
             val oldRefreshToken = oldTokens?.refreshToken ?: return@withLock null
 
             try {
-                val response = refreshClient.post(ApiConfig.Url.REFRESH_TOKEN) {
+                val response = refreshClient.post(ApiUrl.REFRESH_TOKEN) {
                     contentType(ContentType.Application.Json)
                     setBody(mapOf("refreshToken" to oldRefreshToken))
                 }.body<AuthTokenDto>()
