@@ -8,15 +8,7 @@ on:
       - '**.txt'
       - '**/.gitignore'
       - '.editorconfig'
-      - 'fastlane/metadata/**'
-      - 'fastlane/screenshots/**'
-  pull_request:
-    branches: [debug]
-    paths-ignore:
-      - '**.md'
-      - '**.txt'
-      - '**/.gitignore'
-      - '.editorconfig'
+      - '.github/**'
       - 'fastlane/metadata/**'
       - 'fastlane/screenshots/**'
   workflow_dispatch:
