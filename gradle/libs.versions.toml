@@ -1,9 +1,9 @@
 [versions]
-agp = "9.1.0"
+agp = "9.1.1"
 kotlin = "2.3.20"
 compose = "1.10.3"
 google-services = "4.4.4"
-firebase-crashlytics = "3.0.6"
+firebase-crashlytics = "3.0.7"
 androidx-activity = "1.13.0"
 androidx-lifecycle = "2.10.0"
 androidx-datastore = "1.2.1"
@@ -15,13 +15,14 @@ tink-android = "1.21.0"
 ktor = "3.4.2"
 koin = "4.2.0"
 koin-plugin = "0.6.2"
-firebase = "34.11.0"
+firebase = "34.12.0"
 navigation = "2.9.2"
 navigation-event = "1.0.1"
 material-icons = "1.7.3"
 m3 = "1.9.0"
 m3-adaptive = "1.2.0"
 landscapist = "2.9.6"
+buildkonfig = "0.18.0"
 
 #UNIT TEST
 mokkery = "3.3.0"
@@ -115,6 +116,7 @@ mokkery = { id = "dev.mokkery", version.ref = "mokkery"}
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services"}
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics"}
 koin-compiler = { id = "io.insert-koin.compiler.plugin", version.ref = "koin-plugin" }
+buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
 
 #CONVENTION
 convention-android-application = { id = "base.android.application", version = "unspecified" }

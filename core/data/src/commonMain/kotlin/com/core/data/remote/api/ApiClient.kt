@@ -2,6 +2,7 @@ package com.core.data.remote.api
 
 import com.core.common.error.ApiError
 import com.core.common.error.AppException
+import com.core.data.BuildKonfig
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
@@ -25,9 +26,11 @@ import kotlinx.serialization.json.Json
 
 internal class ApiClient(
     private val engine: HttpClientEngine,
-    private val isDebug: Boolean,
     private val tokenManager: TokenManager
 ) {
+
+    private val logLevel = if (BuildKonfig.isDebug) LogLevel.ALL else LogLevel.NONE
+
     val client: HttpClient by lazy {
         HttpClient(engine) {
             expectSuccess = true
@@ -59,19 +62,19 @@ internal class ApiClient(
                     }
 
                     sendWithoutRequest { request ->
-                        val url = Url(ApiConfig.baseUrl)
+                        val url = Url(BuildKonfig.baseUrl)
                         request.url.host == url.host && request.url.protocol == url.protocol
                     }
                 }
             }
 
             install(Logging) {
-                level = if (isDebug) LogLevel.ALL else LogLevel.NONE
+                level = logLevel
                 logger = Logger.SIMPLE
             }
 
             defaultRequest {
-                url(ApiConfig.baseUrl)
+                url(BuildKonfig.baseUrl)
                 header(HttpHeaders.ContentType, ContentType.Application.Json)
             }
 

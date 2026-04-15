@@ -1,8 +1,7 @@
 package com.core.data.di
 
-import com.core.common.isDebuggingMode
-import com.core.common.provider.DispatcherProvider
 import com.core.common.provider.DefaultDispatcher
+import com.core.common.provider.DispatcherProvider
 import com.core.data.local.SecureStorage
 import com.core.data.remote.ConnectivityObserver
 import com.core.data.remote.api.ApiClient
@@ -43,7 +42,6 @@ class NetworkModule {
         tokenManager: TokenManager
     ) : HttpClient = ApiClient(
         engine = engine,
-        isDebug = isDebuggingMode,
         tokenManager = tokenManager
     ).client
 

@@ -1,0 +1,93 @@
+# Helper to get filtered notes
+def fetch_notes
+    # Gets last commit, removes merges
+    sh("git log --no-merges -1 --pretty=format:'- %s'").strip
+end
+
+platform :android do
+    desc "Build Debug APK and upload to Firebase"
+    lane :distribute_debug do
+        # 1. Generate release notes
+        notes = fetch_notes
+
+        # 2. Build APK
+        gradle(task: ":androidApp:assembleDebug")
+
+        # 3. Upload to Firebase
+        firebase_app_distribution(
+            app: ENV["FIREBASE_APP_ID_ANDROID"],
+            groups: "Internal",
+            apk_path: "androidApp/build/outputs/apk/debug/androidApp-debug.apk",
+            release_notes: notes,
+            service_credentials_file: "firebase-credentials.json",
+        )
+    end
+end
+
+
+platform :ios do
+    desc "Build Debug IPA and upload to Firebase"
+        lane :distribute_debug do
+        notes = fetch_notes
+        keychain_name = "build.keychain"
+        keychain_password = "temp_password"
+
+        begin
+            create_keychain(
+                name: keychain_name,
+                password: keychain_password,
+                default_keychain: true,
+                unlock: true,
+                timeout: 3600,
+                lock_when_sleeps: false,
+                add_to_search_list: true
+            )
+
+            import_certificate(
+                certificate_path: ENV["IOS_CERTIFICATE_PATH"],
+                certificate_password: ENV["IOS_CERTIFICATE_PASSWORD"],
+                keychain_name: keychain_name,
+                keychain_password: keychain_password
+            )
+
+            install_provisioning_profile(
+                path: ENV["IOS_PROVISIONING_PROFILE_PATH"]
+            )
+
+            update_code_signing_settings(
+                use_automatic_signing: false,
+                path: "iosApp/iosApp.xcodeproj",
+                code_sign_identity: "iPhone Distribution",
+                profile_name: ENV["IOS_PROVISIONING_PROFILE_NAME"]
+            )
+
+            build_app(
+                project: "iosApp/iosApp.xcodeproj",
+                scheme: "iosApp",
+                configuration: "Debug",
+                export_method: "ad-hoc",
+                export_options: {
+                    signingStyle: "manual",
+                    provisioningProfiles: {
+                        ENV["IOS_BUNDLE_ID"] => ENV["IOS_PROVISIONING_PROFILE_NAME"]
+                    }
+                },
+                output_directory: "build/ios",
+                output_name: "iosApp.ipa",
+                build_path: "build/ios",
+                derived_data_path: "build/derived_data",
+            )
+
+            firebase_app_distribution(
+                app: ENV["FIREBASE_APP_ID_IOS"],
+                groups: "Internal",
+                ipa_path: "build/ios/iosApp.ipa",
+                release_notes: notes,
+                service_credentials_file: "firebase-credentials.json"
+            )
+
+        ensure
+            delete_keychain(name: keychain_name)
+        end
+    end
+end
